@@ -1,0 +1,41 @@
+name = "kontena-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+FIREBASE_PROJECT_ID = "kontena-app"          # change to your Firebase project id
+APP_URL = "https://kontena.app/app/#"          # Flutter web lives at kontena.app/app (hash routes), same Pages project as the site
+SITE_URL = "https://kontena.app"             # landing page
+DEPOSIT_PERCENT = "30"
+PLATFORM_FEE_PERCENT = "1.5"                 # [YOUR FEE] buyer protection fee, booked as revenue when supplier accepts
+SELLER_COMMISSION_PERCENT = "0"              # optional cut taken from the supplier balance at release
+WITHDRAWAL_SPREAD_PERCENT = "1.5"            # FX spread on USDC -> NGN/GHS withdrawals
+USD_NGN = "1500"                             # USD to NGN rate used for pricing. STATIC: update it often or wire a rate API
+USD_GHS = "15"
+PLATFORM_FOSSA_CUSTOMER_ID = "REPLACE"        # FossaPay customer that owns the treasury Stellar wallet
+PLATFORM_STELLAR_ADDRESS = "REPLACE"         # that wallet's G... address
+OFFRAMP_PROVIDER = "yellowcard"              # yellowcard | manual
+YELLOWCARD_BASE = "https://sandbox.api.yellowcard.io"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kontena"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "kontena-media"
+
+[triggers]
+crons = ["*/15 * * * *"]   # deadline sweeper: auto-refunds orders that miss their ship-by date
+
+# Secrets (set with: wrangler secret put NAME)
+#   PAYSTACK_SECRET_KEY, FOSSAPAY_API_KEY, FOSSAPAY_WEBHOOK_SECRET,
+#   YELLOWCARD_API_KEY, YELLOWCARD_SECRET, FCM_SERVICE_ACCOUNT_JSON (optional)
+
+# Routes (uncomment after adding your domain to Cloudflare):
+# routes = [
+#   { pattern = "api.kontena.app/*", zone_name = "kontena.app" },
+#   { pattern = "kontena.app/s/*",   zone_name = "kontena.app" },   # share links -> OG preview + redirect into the app
+# ]

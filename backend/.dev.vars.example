@@ -1,0 +1,9 @@
+# Copy to .dev.vars for `wrangler dev`. Never commit real keys.
+PAYSTACK_SECRET_KEY=sk_test_xxx
+FOSSAPAY_API_KEY=fk_production_xxx
+FOSSAPAY_WEBHOOK_SECRET=xxx
+PLATFORM_FOSSA_CUSTOMER_ID=uuid-of-treasury-customer
+PLATFORM_STELLAR_ADDRESS=G...treasury
+YELLOWCARD_API_KEY=
+YELLOWCARD_SECRET=
+ADMIN_UIDS=firebase-uid-of-your-inspector

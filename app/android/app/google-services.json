@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "91024604067",
+    "project_id": "usekontena",
+    "storage_bucket": "usekontena.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91024604067:android:4f22fbaa04fd94f853f816",
+        "android_client_info": {
+          "package_name": "com.example.kontena"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH2WNkZXm938eatM09l2VpPT4-DnmZCYM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

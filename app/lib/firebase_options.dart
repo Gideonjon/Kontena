@@ -21,20 +21,11 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -58,6 +49,32 @@ class DefaultFirebaseOptions {
     messagingSenderId: '91024604067',
     projectId: 'usekontena',
     authDomain: 'usekontena.firebaseapp.com',
+    storageBucket: 'usekontena.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyA46zQcnzFxz2uLcrR7FVgVQyfAF-tUWuw',
+    appId: '1:91024604067:ios:5ed508c802145ebc53f816',
+    messagingSenderId: '91024604067',
+    projectId: 'usekontena',
+    storageBucket: 'usekontena.firebasestorage.app',
+    iosBundleId: 'com.example.kontena',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyA46zQcnzFxz2uLcrR7FVgVQyfAF-tUWuw',
+    appId: '1:91024604067:ios:5ed508c802145ebc53f816',
+    messagingSenderId: '91024604067',
+    projectId: 'usekontena',
+    storageBucket: 'usekontena.firebasestorage.app',
+    iosBundleId: 'com.example.kontena',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyDH2WNkZXm938eatM09l2VpPT4-DnmZCYM',
+    appId: '1:91024604067:android:4f22fbaa04fd94f853f816',
+    messagingSenderId: '91024604067',
+    projectId: 'usekontena',
     storageBucket: 'usekontena.firebasestorage.app',
   );
 }

@@ -1,6 +1,7 @@
 export interface Env {
   DB: D1Database;
   MEDIA: R2Bucket;
+  PAYMENT_MODE: string;
   FIREBASE_PROJECT_ID: string;
   APP_URL: string;
   SITE_URL: string;

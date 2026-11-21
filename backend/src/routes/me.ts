@@ -59,6 +59,7 @@ me.post("/notifications/read", async (c) => {
 
 /** Creates the user's custodial Stellar wallet on FossaPay. Needs KYC fields on the profile. */
 me.post("/wallet", async (c) => {
+  if (c.env.PAYMENT_MODE === "sandbox") throw new HttpError(503, "USDC wallets are disabled in sandbox mode");
   const u = c.get("user");
   if (u.stellar_address) return c.json({ address: u.stellar_address });
   if (!u.dob || !u.address || !u.city || !u.phone || !u.email) throw bad("Add your phone, date of birth, address and city first");

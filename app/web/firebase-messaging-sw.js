@@ -4,11 +4,11 @@ importScripts('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js
 importScripts('https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js');
 
 firebase.initializeApp({
-  apiKey: 'REPLACE_ME',
-  authDomain: 'kontena-app.firebaseapp.com',
-  projectId: 'kontena-app',
-  messagingSenderId: 'REPLACE_ME',
-  appId: 'REPLACE_ME',
+  apiKey: 'AIzaSyDKIXIR5wDil2-PWchIQRKoOKUITgsURe8',
+  authDomain: 'usekontena.firebaseapp.com',
+  projectId: 'usekontena',
+  messagingSenderId: '91024604067',
+  appId: '1:91024604067:web:d5940653e54e808b53f816',
 });
 
 const messaging = firebase.messaging();

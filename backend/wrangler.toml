@@ -13,8 +13,8 @@ SELLER_COMMISSION_PERCENT = "0"              # optional cut taken from the suppl
 WITHDRAWAL_SPREAD_PERCENT = "1.5"            # FX spread on USDC -> NGN/GHS withdrawals
 USD_NGN = "1500"                             # USD to NGN rate used for pricing. STATIC: update it often or wire a rate API
 USD_GHS = "15"
-PLATFORM_FOSSA_CUSTOMER_ID = "REPLACE"        # FossaPay customer that owns the treasury Stellar wallet
-PLATFORM_STELLAR_ADDRESS = "REPLACE"         # that wallet's G... address
+PLATFORM_FOSSA_CUSTOMER_ID = "b841a7b9-8905-4408-982a-ecdc7fe26d36"        # FossaPay customer that owns the treasury Stellar wallet
+PLATFORM_STELLAR_ADDRESS = "CCEPDPHWB3JRZAUQBS74QD7QYNKHRXGSHXLX5APNBN4AN24HTWRBZRPK"         # that wallet's G... address
 OFFRAMP_PROVIDER = "yellowcard"              # yellowcard | manual
 YELLOWCARD_BASE = "https://sandbox.api.yellowcard.io"
 

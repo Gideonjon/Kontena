@@ -21,7 +21,7 @@ YELLOWCARD_BASE = "https://sandbox.api.yellowcard.io"
 [[d1_databases]]
 binding = "DB"
 database_name = "kontena"
-database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+database_id = "73b931fe-1233-4fb8-8e8a-3c9124be6449"
 
 [[r2_buckets]]
 binding = "MEDIA"

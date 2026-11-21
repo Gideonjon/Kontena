@@ -76,7 +76,7 @@ me.post("/wallet", async (c) => {
 me.get("/wallet", async (c) => {
   const u = c.get("user");
   let usdc = "0.00", xlm = "0";
-  if (u.fossa_customer_id && u.stellar_address) {
+  if (c.env.PAYMENT_MODE !== "sandbox" && u.fossa_customer_id && u.stellar_address) {
     try { const b = await fossa.stellarBalance(c.env, u.fossa_customer_id); usdc = b.usdc; xlm = b.xlm; } catch { /* show zero if provider is down */ }
   }
   const [available, locked] = await Promise.all([availableCents(c.env, u.id), lockedCents(c.env, u.id)]);

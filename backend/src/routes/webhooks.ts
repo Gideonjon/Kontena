@@ -34,6 +34,7 @@ webhooks.post("/paystack", async (c) => {
 
 // FossaPay: HMAC-SHA256 hex of JSON.stringify(body.data), header x-fossapay-signature.
 webhooks.post("/fossapay", async (c) => {
+  if (c.env.PAYMENT_MODE === "sandbox") return c.json({ ok: true, ignored: true, reason: "sandbox_mode" });
   const body = (await c.req.json()) as { eventId: string; eventType: string; data: Record<string, any> };
   const sig = (c.req.header("x-fossapay-signature") ?? "").toLowerCase();
   if (!sig || !safeEqual(sig, await hmacHex("SHA-256", c.env.FOSSAPAY_WEBHOOK_SECRET, JSON.stringify(body.data)))) return c.text("bad signature", 401);

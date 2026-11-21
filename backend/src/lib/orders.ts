@@ -101,6 +101,7 @@ export async function startCardPayment(env: Env, o: Order, email: string, countr
 const USDC_FEE_BUFFER_CENTS = 10;
 
 export async function startUsdcPayment(env: Env, o: Order, buyer: { fossa_customer_id: string | null }) {
+  if (env.PAYMENT_MODE === "sandbox") throw new HttpError(503, "USDC payments are disabled in sandbox mode");
   if (o.status !== "awaiting_payment") throw bad("Order is not awaiting payment");
   if (!buyer.fossa_customer_id) throw bad("Create your USDC wallet first");
   const bal = await fossa.stellarBalance(env, buyer.fossa_customer_id);
@@ -187,6 +188,7 @@ export async function refundExternal(env: Env, o: Order, cents: number) {
       const minor = Math.round((o.pay_amount_minor * cents) / o.total_cents);
       await paystack.refundCharge(env, o.paystack_ref, minor);
     } else if (o.funding === "usdc") {
+      if (env.PAYMENT_MODE === "sandbox") throw new Error("USDC refunds are disabled in sandbox mode");
       const buyer = await env.DB.prepare("SELECT stellar_address FROM users WHERE id=?").bind(o.buyer_id).first<{ stellar_address: string | null }>();
       if (!buyer?.stellar_address) throw new Error("buyer has no stellar address");
       await fossa.sendUsdc(env, { customerId: env.PLATFORM_FOSSA_CUSTOMER_ID, recipient: buyer.stellar_address, amountUsd: cents / 100, memo: o.ref });
@@ -239,6 +241,7 @@ export type WithdrawInput =
   | { method: "fiat"; amountCents: number; payoutAccountId: string };
 
 export async function withdraw(env: Env, userId: string, a: WithdrawInput) {
+  if (env.PAYMENT_MODE === "sandbox" && a.method === "usdc") throw new HttpError(503, "USDC withdrawals are disabled in sandbox mode");
   if (!Number.isInteger(a.amountCents) || a.amountCents < 500) throw bad("Minimum withdrawal is $5");
   const id = uid();
   const t = now();

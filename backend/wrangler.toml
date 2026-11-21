@@ -4,7 +4,7 @@ compatibility_date = "2025-01-15"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-FIREBASE_PROJECT_ID = "kontena-app"          # change to your Firebase project id
+FIREBASE_PROJECT_ID = "usekontena"          # change to your Firebase project id
 APP_URL = "https://kontena.app/app/#"          # Flutter web lives at kontena.app/app (hash routes), same Pages project as the site
 SITE_URL = "https://kontena.app"             # landing page
 DEPOSIT_PERCENT = "30"

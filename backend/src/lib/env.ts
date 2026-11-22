@@ -20,7 +20,7 @@ export interface Env {
   FOSSAPAY_WEBHOOK_SECRET: string;
   /** FossaPay customer id of the platform treasury (holds escrowed USDC) */
   PLATFORM_FOSSA_CUSTOMER_ID: string;
-  /** Stellar address of that treasury wallet */
+FOSSAPAY_WALLETS_ENABLED: string;  /** Stellar address of that treasury wallet */
   PLATFORM_STELLAR_ADDRESS: string;
   YELLOWCARD_API_KEY?: string;
   YELLOWCARD_SECRET?: string;

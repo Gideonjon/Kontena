@@ -6,8 +6,8 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 PAYMENT_MODE = "sandbox"
 FIREBASE_PROJECT_ID = "usekontena"          # change to your Firebase project id
-APP_URL = "https://kontena.app/app/#"          # Flutter web lives at kontena.app/app (hash routes), same Pages project as the site
-SITE_URL = "https://kontena.app"             # landing page
+SITE_URL = "https://usekontena.web.app"
+APP_URL = "https://usekontena.web.app/app"          # landing page
 DEPOSIT_PERCENT = "30"
 PLATFORM_FEE_PERCENT = "1.5"                 # [YOUR FEE] buyer protection fee, booked as revenue when supplier accepts
 SELLER_COMMISSION_PERCENT = "0"              # optional cut taken from the supplier balance at release

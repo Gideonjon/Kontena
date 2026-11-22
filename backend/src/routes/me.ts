@@ -59,8 +59,9 @@ me.post("/notifications/read", async (c) => {
 
 /** Creates the user's custodial Stellar wallet on FossaPay. Needs KYC fields on the profile. */
 me.post("/wallet", async (c) => {
-  if (c.env.PAYMENT_MODE === "sandbox") throw new HttpError(503, "USDC wallets are disabled in sandbox mode");
-  const u = c.get("user");
+if (c.env.FOSSAPAY_WALLETS_ENABLED !== "true") {
+  throw new HttpError(503, "FossaPay wallets are currently disabled");
+}  const u = c.get("user");
   if (u.stellar_address) return c.json({ address: u.stellar_address });
   if (!u.dob || !u.address || !u.city || !u.phone || !u.email) throw bad("Add your phone, date of birth, address and city first");
   let customerId = u.fossa_customer_id;
@@ -76,8 +77,8 @@ me.post("/wallet", async (c) => {
 me.get("/wallet", async (c) => {
   const u = c.get("user");
   let usdc = "0.00", xlm = "0";
-  if (c.env.PAYMENT_MODE !== "sandbox" && u.fossa_customer_id && u.stellar_address) {
-    try { const b = await fossa.stellarBalance(c.env, u.fossa_customer_id); usdc = b.usdc; xlm = b.xlm; } catch { /* show zero if provider is down */ }
+if (c.env.FOSSAPAY_WALLETS_ENABLED === "true" && u.fossa_customer_id && u.stellar_address) {
+      try { const b = await fossa.stellarBalance(c.env, u.fossa_customer_id); usdc = b.usdc; xlm = b.xlm; } catch { /* show zero if provider is down */ }
   }
   const [available, locked] = await Promise.all([availableCents(c.env, u.id), lockedCents(c.env, u.id)]);
   const { results: withdrawals } = await c.env.DB.prepare("SELECT id,method,amount_cents,fiat_currency,fiat_minor,status,created_at FROM withdrawals WHERE user_id=? ORDER BY created_at DESC LIMIT 30").bind(u.id).all();

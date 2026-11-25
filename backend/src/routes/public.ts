@@ -6,6 +6,19 @@ export const pub = new Hono<App>();
 
 pub.get("/health", (c) => c.json({ ok: true }));
 
+/** The Android app. Firebase's free plan refuses .apk files, so the file lives in R2 and is served from here.
+ *  Upload with scripts/build-apk.sh. */
+pub.get("/download/kontena.apk", async (c) => {
+  const obj = await c.env.MEDIA.get("downloads/kontena.apk");
+  if (!obj) throw notFound("The app is not available yet");
+  return new Response(obj.body, { headers: {
+    "Content-Type": "application/vnd.android.package-archive",
+    "Content-Disposition": 'attachment; filename="Kontena.apk"',
+    "Content-Length": String(obj.size),
+    "Cache-Control": "public, max-age=300",
+  } });
+});
+
 pub.get("/fx", (c) => c.json({ USD_NGN: fxRate(c.env, "NGN"), USD_GHS: fxRate(c.env, "GHS"), spreadPercent: 1.5 }));
 
 const storeCols = "s.id, s.slug, s.name, s.bio, s.country, s.city, s.logo_key, s.cover_key, s.verified";

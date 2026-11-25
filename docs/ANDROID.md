@@ -19,9 +19,9 @@ storeFile=/Users/YOU/kontena-release.jks
 ## Build and publish
 ```
 bash scripts/build-apk.sh
-firebase deploy --only hosting
+firebase deploy --only hosting   # only needed when the website itself changed
 ```
-The APK is copied to `site/downloads/kontena.apk` (not committed to git) and the landing page button downloads it at `/downloads/kontena.apk`. For each new version, raise `version:` in `app/pubspec.yaml` (for example `1.0.1+2`), because Android only updates to a higher build number.
+The APK is uploaded to the `kontena-media` R2 bucket and the Worker serves it at `/download/kontena.apk`, which is what the landing page button links to. (Firebase Hosting's free plan rejects `.apk` files, so it cannot host it.) Deploy the Worker once with `cd backend && npx wrangler deploy`. For each new version, raise `version:` in `app/pubspec.yaml` (for example `1.0.1+2`), because Android only updates to a higher build number.
 
 ## Before the first public APK
 - **Application ID.** It is still `com.example.kontena`. The ID cannot change after people install the app. Pick the final one now (for example `store.kontena.app`), add an Android app with that ID in Firebase (Project settings > Your apps), download the new `google-services.json` into `app/android/app/`, and update `applicationId` in `app/android/app/build.gradle.kts`.

@@ -4,8 +4,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 API_URL="${API_URL:-https://kontena-api.purpose-money-api.workers.dev}"
-SITE_URL="${SITE_URL:-https://usekontena.web.app}"
-APP_URL="${APP_URL:-https://usekontena.web.app/app}"
+SITE_URL="${SITE_URL:-https://kontena.store}"
+APP_URL="${APP_URL:-https://kontena.store/app}"
 if [ ! -f app/android/key.properties ]; then
   echo "WARNING: app/android/key.properties not found. Building with the debug key. See docs/ANDROID.md to create a release key."
 fi

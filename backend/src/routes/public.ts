@@ -66,7 +66,7 @@ pub.get("/s/:slug", async (c) => {
   const s = await c.env.DB.prepare("SELECT name,bio,logo_key FROM stores WHERE slug=? AND active=1").bind(slug).first<{ name: string; bio: string; logo_key: string | null }>();
   if (!s) return c.redirect(c.env.SITE_URL, 302);
   const esc = (x: string) => x.replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m]!);
-  const target = `${c.env.APP_URL}/s/${encodeURIComponent(slug)}`;
+  const target = `${c.env.APP_URL}/#/s/${encodeURIComponent(slug)}`;
   const img = s.logo_key ? `${new URL(c.req.url).origin}/media/${s.logo_key}` : "";
   return c.html(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${esc(s.name)} on Kontena</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">

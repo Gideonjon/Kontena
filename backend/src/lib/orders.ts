@@ -94,7 +94,7 @@ export async function startCardPayment(env: Env, o: Order, email: string, countr
     .bind(currency, minor, reference, now(), o.id).run();
   const init = await paystack.initializeCharge(env, {
     email, amountMinor: minor, currency, reference,
-    callbackUrl: `${env.APP_URL}/orders/${o.id}?paid=1`, metadata: { orderId: o.id, ref: o.ref },
+    callbackUrl: `${env.APP_URL}/#/order/${o.id}?paid=1`, metadata: { orderId: o.id, ref: o.ref },
   });
   return { url: init.authorization_url, currency, amountMinor: minor };
 }

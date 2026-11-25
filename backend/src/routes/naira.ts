@@ -42,7 +42,7 @@ naira.post("/topup", async (c) => {
   const bal = await walletBalance(c.env, u.id);
   if (bal + kobo > maxBalanceKobo(c.env)) throw bad(`Your wallet can hold up to ${ngn(maxBalanceKobo(c.env))}. Complete verification to raise this limit.`);
   const reference = `WT-${uid().slice(0, 18)}`;
-  const init = await paystack.initializeTopup(c.env, { email: u.email, amountKobo: kobo, reference, callbackUrl: `${c.env.APP_URL}/c/wallet?topup=1`, userId: u.id });
+  const init = await paystack.initializeTopup(c.env, { email: u.email, amountKobo: kobo, reference, callbackUrl: `${c.env.APP_URL}/#/c/wallet?topup=1`, userId: u.id });
   return c.json({ url: init.authorization_url, reference });
 });
 

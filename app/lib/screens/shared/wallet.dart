@@ -33,7 +33,8 @@ class WalletScreen extends ConsumerWidget {
           error: (e, _) => ErrorBox(e, retry: () => ref.invalidate(walletProvider)),
           data: (w) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             if (vendor) _Earnings(w),
-            if (!vendor) ...[NairaWalletCard(w), const SizedBox(height: 14)],
+            // Naira wallet for everyone: buyers fund and pay from it, suppliers can top up, receive refunds and withdraw
+            NairaWalletCard(w), const SizedBox(height: 14),
             _UsdcCard(w),
             if (vendor && w.list('withdrawals').isNotEmpty) ...[
               const SectionLabel('Withdrawals'),
@@ -41,7 +42,7 @@ class WalletScreen extends ConsumerWidget {
             ],
             const SectionLabel('Good to know'),
             KtCard(color: KT.sky, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              if (!vendor) ...[_Tip(Icons.bolt_rounded, 'Your Naira wallet pays for orders instantly and receives refunds the moment they are approved.'), const SizedBox(height: 12)],
+              _Tip(Icons.bolt_rounded, 'Your Naira wallet pays for orders instantly and receives refunds the moment they are approved.'), const SizedBox(height: 12),
               _Tip(Icons.currency_exchange_rounded, 'The USDC wallet holds digital dollars. Use it to pay for orders without card fees.'),
               const SizedBox(height: 12),
               _Tip(Icons.south_west_rounded, 'To add money, send USDC on the Stellar network to your address. Other networks will be lost.'),

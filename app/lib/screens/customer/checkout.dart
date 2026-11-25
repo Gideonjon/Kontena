@@ -64,6 +64,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final id = r.m('order').s('id');
     if (!mounted) return;
     await payOrder(context, id, method);
+    ref.invalidate(walletProvider);
     if (!mounted) return;
     setState(() => busy = false);
     context.go('/order/$id');
@@ -81,6 +82,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final sym = country == 'GH' ? '₵' : '₦';
     final usdcBalance = double.tryParse(wallet?.s('usdc') ?? '0') ?? 0;
     final usdcOk = usdcBalance >= (total + 10) / 100;
+    final nairaBal = wallet?.m('naira').i('balanceKobo') ?? 0;
+    final nairaNeed = (total * ((fx == null ? 1500 : (fx['USD_NGN'] as num)).toDouble()) * 1.015).ceil();
+    final nairaOk = country == 'NG' && fx != null && nairaBal >= nairaNeed;
 
     return Scaffold(
       appBar: AppBar(title: const Text('Checkout')),
@@ -109,6 +113,12 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             _Step(Icons.replay_rounded, 'If it goes wrong', 'Missed deadline or failed inspection? The locked balance comes back to you.', last: true),
           ])),
           const SectionLabel('Pay with'),
+          if (country == 'NG') ...[
+            _Method(selected: method == 'wallet', icon: Icons.account_balance_wallet_rounded, title: 'Naira wallet',
+                sub: wallet == null ? 'Loading balance…' : 'Balance ${ngn(nairaBal)}${nairaOk ? ' · instant' : ' · add money to use'}',
+                enabled: nairaOk, onTap: () => setState(() => method = 'wallet')),
+            const SizedBox(height: 10),
+          ],
           _Method(selected: method == 'card', icon: Icons.credit_card_rounded, title: country == 'GH' ? 'Card or Mobile Money' : 'Card, bank transfer or USSD',
               sub: local == null ? 'Powered by Paystack' : 'Pay about $sym${NumberFormatter.compact(local)} · Paystack', onTap: () => setState(() => method = 'card')),
           const SizedBox(height: 10),
@@ -116,9 +126,9 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
               sub: wallet == null ? 'Loading balance…' : (wallet.s('address').isEmpty ? 'Set up your wallet in the Wallet tab' : 'Balance ${usdStr(wallet.s('usdc'))}${usdcOk ? '' : ' · not enough'}'),
               enabled: wallet != null && wallet.s('address').isNotEmpty && usdcOk, onTap: () => setState(() => method = 'usdc')),
           const SizedBox(height: 26),
-          KtButton(method == 'card' ? 'Place order & pay' : 'Pay ${usd(total + 10)} in USDC', kind: BtnKind.orange, loading: busy, onPressed: _place),
+          KtButton(method == 'card' ? 'Place order & pay' : method == 'wallet' ? 'Pay ${ngn(nairaNeed)} from wallet' : 'Pay ${usd(total + 10)} in USDC', kind: BtnKind.orange, loading: busy, onPressed: _place),
           const SizedBox(height: 10),
-          Center(child: Text(method == 'usdc' ? 'Includes about \$0.10 network fee.' : 'You\'ll finish payment securely on Paystack.', style: KT.small)),
+          Center(child: Text(method == 'usdc' ? 'Includes about \$0.10 network fee.' : method == 'wallet' ? 'Paid instantly. Refunds come back to this wallet.' : 'You\'ll finish payment securely on Paystack.', style: KT.small)),
         ])),
       ),
     );

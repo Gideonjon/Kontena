@@ -56,3 +56,20 @@ export const sendTransfer = (env: Env, a: { amountMinor: number; recipient: stri
   ps<{ transfer_code: string; status: string }>(env, "POST", "/transfer", {
     source: "balance", amount: a.amountMinor, recipient: a.recipient, reference: a.reference, reason: a.reason, currency: a.currency,
   });
+
+/** Creates a Paystack customer and requests a dedicated NGN account number. Async: the number arrives by webhook
+ *  (dedicatedaccount.assign.success). In test mode preferred_bank must be "test-bank". */
+export const assignDedicatedAccount = (env: Env, a: {
+  email: string; firstName: string; lastName: string; phone: string; preferredBank: string; bvn?: string; accountNumber?: string; bankCode?: string;
+}) =>
+  ps<unknown>(env, "POST", "/dedicated_account/assign", {
+    email: a.email, first_name: a.firstName, last_name: a.lastName, phone: a.phone,
+    preferred_bank: a.preferredBank, country: "NG",
+    ...(a.bvn ? { bvn: a.bvn, account_number: a.accountNumber, bank_code: a.bankCode } : {}),
+  });
+
+export const initializeTopup = (env: Env, a: { email: string; amountKobo: number; reference: string; callbackUrl: string; userId: string }) =>
+  ps<{ authorization_url: string; reference: string }>(env, "POST", "/transaction/initialize", {
+    email: a.email, amount: a.amountKobo, currency: "NGN", reference: a.reference, callback_url: a.callbackUrl,
+    metadata: { type: "wallet_topup", userId: a.userId }, channels: ["card", "bank_transfer", "bank", "ussd"],
+  });

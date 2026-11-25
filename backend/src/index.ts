@@ -11,12 +11,13 @@ import { vendor } from "./routes/vendor";
 import { orders, withdrawals } from "./routes/orders";
 import { webhooks } from "./routes/webhooks";
 import { admin } from "./routes/admin";
+import { naira } from "./routes/naira";
 
 const app = new Hono<App>();
 
 app.use("*", cors({
   origin: (origin, c) => {
-    const ok = [c.env.APP_URL, c.env.SITE_URL, "https://usekontena.web.app", "https://kontena.app", "http://localhost:8080", "http://localhost:5000"];
+    const ok = [c.env.APP_URL, c.env.SITE_URL, "https://usekontena.web.app", "https://kontena.app", "https://kontena.store", "https://www.kontena.store", "http://localhost:8080", "http://localhost:5000"];
     return ok.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin) ? origin : "";
   },
   allowHeaders: ["Authorization", "Content-Type"],
@@ -33,6 +34,7 @@ authed.route("/vendor", vendor);
 authed.route("/orders", orders);
 authed.route("/withdrawals", withdrawals);
 authed.route("/admin", admin);
+authed.route("/naira", naira);
 app.route("/", authed);
 
 app.onError((err, c) => {

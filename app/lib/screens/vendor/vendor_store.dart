@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/config.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api.dart';
@@ -50,7 +51,7 @@ class VendorStoreScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: 14),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(s.s('name'), style: KT.h2), Text('kontena.app/s/${s.s('slug')}', style: KT.small),
+                  Text(s.s('name'), style: KT.h2), Text('${Config.siteUrl.replaceFirst('https://', '')}/s/${s.s('slug')}', style: KT.small),
                   const SizedBox(height: 6),
                   s.b('verified') ? const Pill('Verified', bg: KT.mint, fg: KT.green) : const Pill('Not verified yet'),
                 ])),

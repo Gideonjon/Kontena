@@ -3,6 +3,7 @@ import type { App } from "./types";
 import { hmacHex, now, safeEqual } from "../lib/util";
 import { finishWithdrawal, markFunded } from "../lib/orders";
 import type { Env } from "../lib/env";
+import { creditFromTransfer, creditWallet, failAssignedAccount, storeAssignedAccount } from "../lib/naira";
 
 export const webhooks = new Hono<App>();
 
@@ -16,14 +17,28 @@ webhooks.post("/paystack", async (c) => {
   const raw = await c.req.text();
   const sig = c.req.header("x-paystack-signature") ?? "";
   if (!safeEqual(sig, await hmacHex("SHA-512", c.env.PAYSTACK_SECRET_KEY, raw))) return c.text("bad signature", 401);
-  const ev = JSON.parse(raw) as { event: string; data: { id?: number; reference: string; amount?: number; currency?: string; metadata?: { orderId?: string } } };
-  if (!(await once(c.env, "paystack", `${ev.event}:${ev.data.id ?? ev.data.reference}`))) return c.text("ok");
+  const ev = JSON.parse(raw) as { event: string; data: any };
+  if (!(await once(c.env, "paystack", `${ev.event}:${ev.data.id ?? ev.data.reference ?? `${ev.data.customer?.customer_code ?? ev.data.customer?.email ?? ""}:${ev.data.dedicated_account?.account_number ?? ""}`}`))) return c.text("ok");
 
   if (ev.event === "charge.success") {
-    const o = await c.env.DB.prepare("SELECT id,pay_amount_minor,pay_currency FROM orders WHERE paystack_ref=?").bind(ev.data.reference)
+    const d = ev.data;
+    const o = await c.env.DB.prepare("SELECT id,pay_amount_minor,pay_currency FROM orders WHERE paystack_ref=?").bind(d.reference)
       .first<{ id: string; pay_amount_minor: number; pay_currency: string }>();
-    // never trust the webhook alone: amount and currency must match what we asked for
-    if (o && ev.data.amount! >= o.pay_amount_minor && ev.data.currency === o.pay_currency) await markFunded(c.env, o.id, "card/bank");
+    if (o) {
+      // never trust the webhook alone: amount and currency must match what we asked for
+      if (d.amount >= o.pay_amount_minor && d.currency === o.pay_currency) await markFunded(c.env, o.id, "card/bank");
+    } else if (d.currency === "NGN" && d.metadata?.type === "wallet_topup" && d.metadata?.userId) {
+      // card / checkout top-up
+      await creditWallet(c.env, String(d.metadata.userId), "topup", d.amount, d.reference, { note: "Top-up" });
+    } else if (d.currency === "NGN" && d.channel === "dedicated_nuban") {
+      // a bank transfer into the user's personal Kontena account number
+      await creditFromTransfer(c.env, { customerCode: d.customer?.customer_code, email: d.customer?.email }, d.amount, d.reference);
+    }
+  } else if (ev.event === "dedicatedaccount.assign.success") {
+    const d = ev.data;
+    if (d.dedicated_account) await storeAssignedAccount(c.env, { customerCode: d.customer?.customer_code, email: d.customer?.email }, d.dedicated_account);
+  } else if (ev.event === "dedicatedaccount.assign.failed") {
+    await failAssignedAccount(c.env, { customerCode: ev.data.customer?.customer_code, email: ev.data.customer?.email });
   } else if (ev.event === "transfer.success") {
     await finishWithdrawal(c.env, ev.data.reference, true);
   } else if (ev.event === "transfer.failed" || ev.event === "transfer.reversed") {

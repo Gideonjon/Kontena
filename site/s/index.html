@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opening store… · Kontena</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.png">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F7F7F5;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#101114;text-align:center}
+.b{padding:24px}.d{width:34px;height:34px;border:4px solid #FFD9C7;border-top-color:#FF5B14;border-radius:50%;margin:0 auto 18px;animation:s .8s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
+a{color:#FF5B14;font-weight:700}</style></head>
+<body><div class="b"><div class="d"></div><p id="m">Opening this store on Kontena…</p><p><a id="l" href="/app/">Tap here if nothing happens</a></p></div>
+<script>
+// Store share links look like  /s/<store-name>. Hand them to the app, which uses hash routes.
+(function () {
+  var slug = decodeURIComponent((location.pathname.split("/s/")[1] || "").split("/")[0] || "").trim();
+  var to = slug ? "/app/#/s/" + encodeURIComponent(slug) : "/app/";
+  document.getElementById("l").href = to;
+  location.replace(to);
+})();
+</script></body></html>

@@ -12,6 +12,10 @@ export interface Env {
   /** % FX spread kept on fiat withdrawals */
   WITHDRAWAL_SPREAD_PERCENT?: string;
   USD_NGN: string;
+  /** Paystack DVA provider slug: test-bank (test mode), wema-bank or titan-paystack (live) */
+  PAYSTACK_DVA_BANK?: string;
+  /** max Naira wallet balance a card top-up may reach (default 300000). Set per your licence / KYC tier. */
+  WALLET_MAX_NGN?: string;
   USD_GHS: string;
   OFFRAMP_PROVIDER: string;
   YELLOWCARD_BASE: string;
@@ -35,6 +39,7 @@ export type User = {
   id: string; email: string; name: string; phone: string; country: string; role: string;
   dob: string | null; address: string | null; city: string | null;
   fossa_customer_id: string | null; fossa_wallet_id: string | null; stellar_address: string | null;
+  refund_to: string;
   created_at: number;
 };
 

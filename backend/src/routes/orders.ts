@@ -3,7 +3,7 @@ import type { App } from "./types";
 import { bad, forbidden, notFound } from "../lib/util";
 import { isAdmin } from "../lib/auth";
 import {
-  cancelUnpaid, confirmDelivery, createOrder, getOrder, inspectionResult, startCardPayment, startUsdcPayment, withdraw, type Order, type WithdrawInput,
+  cancelUnpaid, confirmDelivery, createOrder, getOrder, inspectionResult, startCardPayment, startUsdcPayment, startWalletPayment, withdraw, type Order, type WithdrawInput,
 } from "../lib/orders";
 
 export const orders = new Hono<App>();
@@ -51,11 +51,12 @@ orders.get("/:id", async (c) => c.json({ order: await detail(c, await load(c, "a
 
 orders.post("/:id/pay", async (c) => {
   const o = await load(c);
-  const { method } = await c.req.json<{ method: "card" | "usdc" }>();
+  const { method } = await c.req.json<{ method: "card" | "usdc" | "wallet" }>();
   const u = c.get("user");
   if (method === "usdc") return c.json(await startUsdcPayment(c.env, o, u));
+  if (method === "wallet") return c.json(await startWalletPayment(c.env, o, u.id, u.country));
   if (method === "card") return c.json(await startCardPayment(c.env, o, u.email, u.country));
-  throw bad("method must be card or usdc");
+  throw bad("method must be card, usdc or wallet");
 });
 
 orders.post("/:id/cancel", async (c) => { await cancelUnpaid(c.env, await load(c)); return c.json({ ok: true }); });

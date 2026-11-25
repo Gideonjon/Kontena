@@ -23,3 +23,7 @@ String initials(String name) {
   if (p.isEmpty) return '?';
   return (p.first[0] + (p.length > 1 ? p.last[0] : '')).toUpperCase();
 }
+
+final _ngn = NumberFormat.currency(symbol: '₦', decimalDigits: 2);
+/// Kobo (integer, 1/100 naira) -> "₦1,234.50"
+String ngn(int kobo) => _ngn.format(kobo / 100);

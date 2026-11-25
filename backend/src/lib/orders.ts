@@ -4,6 +4,7 @@ import { notify } from "./fcm";
 import * as paystack from "./paystack";
 import * as fossa from "./fossapay";
 import * as yc from "./yellowcard";
+import { creditWallet, debitWallet, ngn } from "./naira";
 
 export type Order = {
   id: string; ref: string; store_id: string; buyer_id: string; vendor_id: string; pool_id: string | null; status: string;
@@ -98,6 +99,23 @@ export async function startCardPayment(env: Env, o: Order, email: string, countr
   return { url: init.authorization_url, currency, amountMinor: minor };
 }
 
+/** Pay from the Naira wallet: instant, no card fees. Debit and funding happen together or not at all. */
+export async function startWalletPayment(env: Env, o: Order, buyerId: string, country: string) {
+  if (o.status !== "awaiting_payment") throw bad("Order is not awaiting payment");
+  if (country !== "NG") throw bad("The Naira wallet is for Nigeria only");
+  const minor = usdToMinor(env, o.total_cents, "NGN");
+  await debitWallet(env, buyerId, "order_payment", minor, o.id, { orderId: o.id, note: `Order ${o.ref}` });
+  const claimed = await env.DB.prepare("UPDATE orders SET funding='wallet', pay_currency='NGN', pay_amount_minor=?, updated_at=? WHERE id=? AND status='awaiting_payment' AND funding IS NULL")
+    .bind(minor, now(), o.id).run();
+  if (!(claimed.meta.changes ?? 0)) {
+    // someone else started payment first: give the money straight back
+    await creditWallet(env, buyerId, "refund", minor, `undo:${o.id}`, { orderId: o.id, note: "Payment not needed", silent: true });
+    throw bad("Payment already started");
+  }
+  await markFunded(env, o.id, "Naira wallet");
+  return { status: "paid", amountKobo: minor };
+}
+
 const USDC_FEE_BUFFER_CENTS = 10;
 
 export async function startUsdcPayment(env: Env, o: Order, buyer: { fossa_customer_id: string | null }) {
@@ -184,6 +202,16 @@ export async function cancelUnpaid(env: Env, o: Order) {
 /** Sends money back to the buyer on the rail they paid with. Records failures as events for ops to retry. */
 export async function refundExternal(env: Env, o: Order, cents: number) {
   try {
+    // Naira orders refund into the buyer's wallet: instant, and it works for orders paid from the wallet itself.
+    if (o.pay_currency === "NGN" && o.pay_amount_minor && (o.funding === "wallet" || o.funding === "paystack")) {
+      const buyer = await env.DB.prepare("SELECT refund_to FROM users WHERE id=?").bind(o.buyer_id).first<{ refund_to: string | null }>();
+      if (o.funding === "wallet" || (buyer?.refund_to ?? "wallet") === "wallet") {
+        const kobo = Math.round((o.pay_amount_minor * cents) / o.total_cents);
+        await creditWallet(env, o.buyer_id, "refund", kobo, `refund:${o.id}`, { orderId: o.id, note: `Refund for ${o.ref}` });
+        await addEvent(env, o.id, "refund_sent", `${ngn(kobo)} refunded to the buyer's Naira wallet`);
+        return;
+      }
+    }
     if (o.funding === "paystack" && o.paystack_ref && o.pay_amount_minor) {
       const minor = Math.round((o.pay_amount_minor * cents) / o.total_cents);
       await paystack.refundCharge(env, o.paystack_ref, minor);
@@ -316,8 +344,23 @@ async function reverseSpread(env: Env, withdrawalId: string) {
 }
 
 export async function finishWithdrawal(env: Env, id: string, ok: boolean, note = "") {
-  const w = await env.DB.prepare("SELECT * FROM withdrawals WHERE id=?").bind(id).first<{ user_id: string; amount_cents: number; status: string }>();
+  const w = await env.DB.prepare("SELECT * FROM withdrawals WHERE id=?").bind(id).first<{ user_id: string; amount_cents: number; status: string; method: string; fiat_minor: number | null }>();
   if (!w || w.status === "completed" || w.status === "failed") return;
+  if (w.method === "wallet_bank") {
+    // Naira wallet withdrawal: amounts are kobo and a failure returns the money to the wallet
+    const kobo = w.fiat_minor ?? 0;
+    if (ok) {
+      await env.DB.prepare("UPDATE withdrawals SET status='completed', updated_at=? WHERE id=?").bind(now(), id).run();
+      await notify(env, w.user_id, "Withdrawal sent", `${ngn(kobo)} is on its way to your bank account.`);
+    } else {
+      const claimed = await env.DB.prepare("UPDATE withdrawals SET status='failed', error=?, updated_at=? WHERE id=? AND status NOT IN ('failed','completed')").bind(note.slice(0, 200), now(), id).run();
+      if ((claimed.meta.changes ?? 0) > 0) {
+        await creditWallet(env, w.user_id, "withdrawal_reversal", kobo, id, { note: "Withdrawal failed, money returned", silent: true });
+        await notify(env, w.user_id, "Withdrawal failed", `${ngn(kobo)} was returned to your Naira wallet.`);
+      }
+    }
+    return;
+  }
   if (ok) {
     await env.DB.prepare("UPDATE withdrawals SET status='completed', updated_at=? WHERE id=?").bind(now(), id).run();
     await notify(env, w.user_id, "Withdrawal sent", `${money(w.amount_cents)} is on its way to your account.`);

@@ -3,6 +3,7 @@ import type { App } from "./types";
 import type { User } from "../lib/env";
 import { bad, HttpError, now, uid, currencyFor } from "../lib/util";
 import { availableCents, lockedCents } from "../lib/orders";
+import { recentEntries, virtualAccount, walletBalance } from "../lib/naira";
 import * as paystack from "../lib/paystack";
 import * as fossa from "../lib/fossapay";
 import { isAdmin } from "../lib/auth";
@@ -83,7 +84,8 @@ if (c.env.FOSSAPAY_WALLETS_ENABLED === "true" && u.fossa_customer_id && u.stella
   const [available, locked] = await Promise.all([availableCents(c.env, u.id), lockedCents(c.env, u.id)]);
   const { results: withdrawals } = await c.env.DB.prepare("SELECT id,method,amount_cents,fiat_currency,fiat_minor,status,created_at FROM withdrawals WHERE user_id=? ORDER BY created_at DESC LIMIT 30").bind(u.id).all();
   const { results: accounts } = await c.env.DB.prepare("SELECT id,kind,currency,bank_name,account_number,account_name FROM payout_accounts WHERE user_id=?").bind(u.id).all();
-  return c.json({ usdc, xlm, address: u.stellar_address, earnings: { availableCents: available, lockedCents: locked }, withdrawals, accounts });
+  const [nairaBalance, nairaAccount, nairaEntries] = await Promise.all([walletBalance(c.env, u.id), virtualAccount(c.env, u.id), recentEntries(c.env, u.id, 30)]);
+  return c.json({ usdc, xlm, address: u.stellar_address, naira: { balanceKobo: nairaBalance, account: nairaAccount, entries: nairaEntries, refundTo: u.refund_to ?? "wallet" }, earnings: { availableCents: available, lockedCents: locked }, withdrawals, accounts });
 });
 
 // ---------- payout accounts ----------

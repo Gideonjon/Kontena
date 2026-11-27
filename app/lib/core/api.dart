@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'config.dart';
+import 'passkeys.dart';
 
 class ApiException implements Exception {
   final String message;
@@ -31,30 +32,46 @@ class Api {
   static final Api i = Api._();
   late final Dio _dio;
 
-  Future<Map<String, dynamic>> _run(Future<Response<dynamic>> Function() f) async {
+  static Map<String, dynamic> _data(Response<dynamic> r) {
+    final d = r.data;
+    return d is Map<String, dynamic> ? d : <String, dynamic>{};
+  }
+
+  static ApiException _error(DioException e) {
+    final d = e.response?.data;
+    final msg = d is Map && d['error'] is String
+        ? d['error'] as String
+        : (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.connectionTimeout)
+            ? 'No connection. Check your internet and try again.'
+            : 'Something went wrong. Please try again.';
+    return ApiException(msg, e.response?.statusCode);
+  }
+
+  /// Runs a request. If the server asks for a fingerprint confirmation (money actions for users with a passkey),
+  /// prompts for it once and retries with the confirmation token.
+  Future<Map<String, dynamic>> _run(Future<Response<dynamic>> Function(Options o) f) async {
     try {
-      final r = await f();
-      final d = r.data;
-      return d is Map<String, dynamic> ? d : <String, dynamic>{};
+      return _data(await f(Options()));
     } on DioException catch (e) {
-      final d = e.response?.data;
-      final msg = d is Map && d['error'] is String
-          ? d['error'] as String
-          : (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.connectionTimeout)
-              ? 'No connection. Check your internet and try again.'
-              : 'Something went wrong. Please try again.';
-      throw ApiException(msg, e.response?.statusCode);
+      final err = _error(e);
+      if (err.status != 403 || err.message != 'PASSKEY_REQUIRED') throw err;
+    }
+    final token = await Passkeys.confirm();
+    try {
+      return _data(await f(Options(headers: {'X-Passkey-Token': token})));
+    } on DioException catch (e) {
+      throw _error(e);
     }
   }
 
-  Future<Map<String, dynamic>> get(String p, {Map<String, dynamic>? q}) => _run(() => _dio.get(p, queryParameters: q));
-  Future<Map<String, dynamic>> post(String p, [Object? body]) => _run(() => _dio.post(p, data: body ?? {}));
-  Future<Map<String, dynamic>> patch(String p, Object body) => _run(() => _dio.patch(p, data: body));
-  Future<Map<String, dynamic>> delete(String p) => _run(() => _dio.delete(p));
+  Future<Map<String, dynamic>> get(String p, {Map<String, dynamic>? q}) => _run((o) => _dio.get(p, queryParameters: q, options: o));
+  Future<Map<String, dynamic>> post(String p, [Object? body]) => _run((o) => _dio.post(p, data: body ?? {}, options: o));
+  Future<Map<String, dynamic>> patch(String p, Object body) => _run((o) => _dio.patch(p, data: body, options: o));
+  Future<Map<String, dynamic>> delete(String p) => _run((o) => _dio.delete(p, options: o));
 
   /// Uploads an image and returns its storage key.
   Future<String> upload(List<int> bytes, String contentType) async {
-    final r = await _run(() => _dio.post('/media', data: Stream.fromIterable([bytes]),
+    final r = await _run((_) => _dio.post('/media', data: Stream.fromIterable([bytes]),
         options: Options(contentType: contentType, headers: {Headers.contentLengthHeader: bytes.length})));
     return r['key'] as String;
   }

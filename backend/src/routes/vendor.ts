@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import type { App } from "./types";
 import { bad, forbidden, notFound, now, slugify, uid } from "../lib/util";
 import { getOrder, vendorAccept, vendorReady } from "../lib/orders";
+import { checkProof } from "../lib/messages";
 
 export const vendor = new Hono<App>();
 
@@ -98,6 +99,8 @@ vendor.post("/orders/:id/accept", async (c) => { await vendorAccept(c.env, await
 
 vendor.post("/orders/:id/ready", async (c) => {
   const b = await c.req.json<{ proofKeys: string[]; note?: string }>();
-  await vendorReady(c.env, await mine(c), b.proofKeys ?? [], b.note ?? "");
+  const o = await mine(c);
+  checkProof(c.env, b.proofKeys ?? []);
+  await vendorReady(c.env, o, b.proofKeys ?? [], b.note ?? "");
   return c.json({ ok: true });
 });

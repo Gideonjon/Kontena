@@ -33,6 +33,9 @@ FOSSAPAY_WALLETS_ENABLED: string;  /** Stellar address of that treasury wallet *
   ADMIN_UIDS?: string;
   /** buyers may approve inspections themselves up to this many USD cents */
   INSPECTION_BUYER_MAX_CENTS?: string;
+  /** proof the supplier must upload before inspection (defaults 3 photos, 1 video) */
+  PROOF_MIN_PHOTOS?: string;
+  PROOF_MIN_VIDEOS?: string;
   // ---- Stellar on-chain escrow (all optional: leave unset to keep escrow off-chain) ----
   /** testnet | public */
   STELLAR_NETWORK?: string;

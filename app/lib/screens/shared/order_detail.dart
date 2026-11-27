@@ -13,6 +13,10 @@ import '../../widgets/ui.dart';
 import '../customer/checkout.dart';
 import '../customer/orders_list.dart';
 import '../vendor/vendor_orders.dart';
+import 'order_chat.dart';
+
+const _minPhotos = 3;
+const _minVideos = 1;
 
 final orderProvider = FutureProvider.autoDispose.family<Map<String, dynamic>, String>((ref, id) async => (await Api.i.get('/orders/$id')).m('order'));
 
@@ -109,6 +113,10 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
             ])),
           ],
           ..._actions(o, isBuyer, status),
+          if (status != 'cancelled') ...[
+            const SectionLabel('Messages'),
+            OrderChat(orderId: o.s('id')),
+          ],
           const SectionLabel('Items'),
           KtCard(child: Column(children: [
             for (final it in items) Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: Row(children: [
@@ -121,9 +129,7 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           if (proofs.isNotEmpty) ...[
             const SectionLabel('Supplier proof'),
             SizedBox(height: 110, child: ListView(scrollDirection: Axis.horizontal, children: [
-              for (final k in proofs) Padding(padding: const EdgeInsets.only(right: 10), child: ClipRRect(borderRadius: BorderRadius.circular(16), child: GestureDetector(
-                onTap: () => showDialog(context: context, builder: (_) => Dialog(child: InteractiveViewer(child: Image.network(Api.mediaUrl(k))))),
-                child: Image.network(Api.mediaUrl(k), width: 110, height: 110, fit: BoxFit.cover)))),
+              for (final k in proofs) _ProofTile(k),
             ])),
           ],
           const SectionLabel('Activity'),
@@ -184,9 +190,79 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
   }
 
   Future<void> _ready(String id) async {
-    final keys = await pickAndUploadImages(context, multi: true);
-    if (keys.isEmpty || !mounted) return;
-    await _act(() => Api.i.post('/vendor/orders/$id/ready', {'proofKeys': keys}), done: 'Sent for inspection');
+    final photos = <String>[];
+    final videos = <String>[];
+    final noteC = TextEditingController();
+    final send = await showModalBottomSheet<bool>(context: context, isScrollControlled: true, builder: (ctx) => StatefulBuilder(builder: (ctx, set) {
+      final ok = photos.length >= _minPhotos && videos.length >= _minVideos;
+      return Padding(
+        padding: EdgeInsets.fromLTRB(24, 4, 24, 24 + MediaQuery.of(ctx).viewInsets.bottom),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Show the goods', style: KT.h2), const SizedBox(height: 6),
+          Text('Upload at least $_minPhotos clear photos and $_minVideos short video (under 1 minute) so the buyer and inspector can check everything.', style: KT.body),
+          const SizedBox(height: 16),
+          _ProofRow(icon: Icons.photo_camera_rounded, label: 'Photos', have: photos.length, need: _minPhotos, onAdd: () async {
+            final k = await pickAndUploadImages(ctx, multi: true);
+            set(() => photos.addAll(k));
+          }),
+          const SizedBox(height: 10),
+          _ProofRow(icon: Icons.videocam_rounded, label: 'Video', have: videos.length, need: _minVideos, onAdd: () async {
+            final k = await pickAndUploadVideo(ctx);
+            if (k != null) set(() => videos.add(k));
+          }),
+          const SizedBox(height: 10),
+          KtField(noteC, 'Note for the buyer (optional)', maxLines: 2),
+          KtButton('Send for inspection', onPressed: ok ? () => Navigator.pop(ctx, true) : null),
+        ]),
+      );
+    }));
+    if (send != true || !mounted) return;
+    await _act(() => Api.i.post('/vendor/orders/$id/ready', {'proofKeys': [...photos, ...videos], 'note': noteC.text.trim()}), done: 'Sent for inspection');
+  }
+}
+
+class _ProofRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int have, need;
+  final Future<void> Function() onAdd;
+  const _ProofRow({required this.icon, required this.label, required this.have, required this.need, required this.onAdd});
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: have >= need ? KT.mint : KT.paper, borderRadius: BorderRadius.circular(18)),
+        child: Row(children: [
+          Icon(icon, color: KT.ink), const SizedBox(width: 12),
+          Expanded(child: Text('$label · $have added (need $need+)', style: const TextStyle(fontWeight: FontWeight.w700))),
+          TextButton(onPressed: onAdd, child: Text(have == 0 ? 'Add' : 'Add more')),
+        ]),
+      );
+}
+
+/// One piece of supplier evidence: photos open full size, videos open in the browser's player.
+class _ProofTile extends StatelessWidget {
+  final String k;
+  const _ProofTile(this.k);
+  @override
+  Widget build(BuildContext context) {
+    final video = isVideoKey(k);
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: GestureDetector(
+          onTap: () => video
+              ? launchUrl(Uri.parse(Api.mediaUrl(k)), mode: LaunchMode.externalApplication)
+              : showDialog(context: context, builder: (_) => Dialog(child: InteractiveViewer(child: Image.network(Api.mediaUrl(k))))),
+          child: video
+              ? Container(width: 110, height: 110, color: KT.ink, child: const Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Icon(Icons.play_circle_fill_rounded, color: Colors.white, size: 42), SizedBox(height: 4),
+                  Text('Video', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                ]))
+              : Image.network(Api.mediaUrl(k), width: 110, height: 110, fit: BoxFit.cover),
+        ),
+      ),
+    );
   }
 }
 

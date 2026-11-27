@@ -151,10 +151,11 @@ me.delete("/payout-accounts/:id", async (c) => {
 
 me.post("/media", async (c) => {
   const type = c.req.header("Content-Type") ?? "";
-  if (!/^image\/(jpeg|png|webp)$/.test(type)) throw bad("Only JPEG, PNG or WebP images");
+  const isVideo = /^video\/(mp4|quicktime|webm)$/.test(type);
+  if (!isVideo && !/^image\/(jpeg|png|webp)$/.test(type)) throw bad("Only JPEG, PNG or WebP images, or MP4, MOV or WebM videos");
   const buf = await c.req.arrayBuffer();
-  if (buf.byteLength > 4 * 1024 * 1024) throw new HttpError(413, "Image must be under 4 MB");
-  const ext = type.split("/")[1];
+  if (isVideo ? buf.byteLength > 50 * 1024 * 1024 : buf.byteLength > 4 * 1024 * 1024) throw new HttpError(413, isVideo ? "Video must be under 50 MB (about 1 minute)" : "Image must be under 4 MB");
+  const ext = type === "video/quicktime" ? "mov" : type.split("/")[1];
   const key = `${c.get("user").id}/${uid()}.${ext}`;
   await c.env.MEDIA.put(key, buf, { httpMetadata: { contentType: type } });
   return c.json({ key });

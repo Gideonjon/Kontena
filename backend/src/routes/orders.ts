@@ -4,6 +4,7 @@ import { bad, forbidden, notFound } from "../lib/util";
 import { isAdmin } from "../lib/auth";
 import { chainInfo } from "../lib/chain";
 import { requirePasskeyIfEnrolled } from "../lib/passkeys";
+import { listMessages, postMessage } from "../lib/messages";
 import {
   cancelUnpaid, confirmDelivery, createOrder, getOrder, inspectionResult, startCardPayment, startUsdcPayment, startWalletPayment, withdraw, type Order, type WithdrawInput,
 } from "../lib/orders";
@@ -60,6 +61,12 @@ orders.post("/:id/pay", async (c) => {
   if (method === "wallet") return c.json(await startWalletPayment(c.env, o, u.id, u.country));
   if (method === "card") return c.json(await startCardPayment(c.env, o, u.email, u.country));
   throw bad("method must be card, usdc or wallet");
+});
+
+orders.get("/:id/messages", async (c) => c.json({ messages: await listMessages(c.env, await load(c, "any"), c.get("user")) }));
+orders.post("/:id/messages", async (c) => {
+  const b = await c.req.json<{ body?: string; mediaKey?: string }>();
+  return c.json(await postMessage(c.env, await load(c, "any"), c.get("user"), b));
 });
 
 orders.post("/:id/cancel", async (c) => { await cancelUnpaid(c.env, await load(c)); return c.json({ ok: true }); });

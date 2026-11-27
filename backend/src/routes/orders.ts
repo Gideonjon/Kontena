@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import type { App } from "./types";
 import { bad, forbidden, notFound } from "../lib/util";
 import { isAdmin } from "../lib/auth";
+import { chainInfo } from "../lib/chain";
+import { requirePasskeyIfEnrolled } from "../lib/passkeys";
 import {
   cancelUnpaid, confirmDelivery, createOrder, getOrder, inspectionResult, startCardPayment, startUsdcPayment, startWalletPayment, withdraw, type Order, type WithdrawInput,
 } from "../lib/orders";
@@ -20,7 +22,7 @@ async function detail(c: { env: App["Bindings"] }, o: Order) {
         COALESCE((SELECT SUM(oi.qty) FROM orders x JOIN order_items oi ON oi.order_id=x.id WHERE x.pool_id=pl.id AND x.status NOT IN ('cancelled','refunded')),0) AS joined_qty
        FROM pools pl WHERE pl.id=?`).bind(o.pool_id).first();
   }
-  return { ...o, proof_keys: JSON.parse(o.proof_keys), items, events, store, buyerName: buyer?.name ?? "", pool };
+  return { ...o, proof_keys: JSON.parse(o.proof_keys), items, events, store, buyerName: buyer?.name ?? "", pool, chain: await chainInfo(c.env, o) };
 }
 
 async function load(c: { env: App["Bindings"]; get: (k: "user") => App["Variables"]["user"]; req: { param: (k: string) => string } }, who: "buyer" | "any" = "buyer") {
@@ -53,6 +55,7 @@ orders.post("/:id/pay", async (c) => {
   const o = await load(c);
   const { method } = await c.req.json<{ method: "card" | "usdc" | "wallet" }>();
   const u = c.get("user");
+  await requirePasskeyIfEnrolled(c.env, u.id, c.req.header("X-Passkey-Token"), `pay:${o.id}`);
   if (method === "usdc") return c.json(await startUsdcPayment(c.env, o, u));
   if (method === "wallet") return c.json(await startWalletPayment(c.env, o, u.id, u.country));
   if (method === "card") return c.json(await startCardPayment(c.env, o, u.email, u.country));
@@ -70,6 +73,7 @@ orders.post("/:id/inspection", async (c) => {
   const max = Number(c.env.INSPECTION_BUYER_MAX_CENTS ?? 100_000);
   const allowed = isAdmin(c.env, u) || (o.buyer_id === u.id && o.total_cents <= max);
   if (!allowed) throw forbidden("This order needs a Kontena inspector");
+  if (!isAdmin(c.env, u)) await requirePasskeyIfEnrolled(c.env, u.id, c.req.header("X-Passkey-Token"), `inspection:${o.id}`);
   await inspectionResult(c.env, o, !!b.pass, b.note ?? "");
   return c.json({ ok: true });
 });
@@ -95,6 +99,7 @@ orders.post("/join-pool", async (c) => {
 
 export const withdrawals = new Hono<App>();
 withdrawals.post("/", async (c) => {
+  await requirePasskeyIfEnrolled(c.env, c.get("user").id, c.req.header("X-Passkey-Token"), "withdraw");
   const b = await c.req.json<{ method: "usdc" | "fiat"; amountUsd: number; address?: string; memo?: string; payoutAccountId?: string }>();
   const cents = Math.round((b.amountUsd ?? 0) * 100);
   let input: WithdrawInput;

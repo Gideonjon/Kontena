@@ -3,6 +3,7 @@ import type { App } from "./types";
 import { bad, HttpError, now, uid } from "../lib/util";
 import * as paystack from "../lib/paystack";
 import { creditWallet, debitWallet, maxBalanceKobo, ngn, recentEntries, virtualAccount, walletBalance } from "../lib/naira";
+import { requirePasskeyIfEnrolled } from "../lib/passkeys";
 
 export const naira = new Hono<App>();
 
@@ -48,6 +49,7 @@ naira.post("/topup", async (c) => {
 
 /** Send wallet money to the user's own saved bank account. */
 naira.post("/withdraw", async (c) => {
+  await requirePasskeyIfEnrolled(c.env, c.get("user").id, c.req.header("X-Passkey-Token"), "naira:withdraw");
   const u = c.get("user");
   const b = await c.req.json<{ amountNgn: number; payoutAccountId: string }>();
   const kobo = Math.round((b.amountNgn ?? 0) * 100);

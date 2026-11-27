@@ -2,6 +2,11 @@ name = "kontena-api"
 main = "src/index.ts"
 compatibility_date = "2025-01-15"
 compatibility_flags = ["nodejs_compat"]
+routes = [{ pattern = "api.kontena.store", custom_domain = true }]
+workers_dev = true
+preview_urls = false
+
+
 
 [vars]
 PAYMENT_MODE = "sandbox"

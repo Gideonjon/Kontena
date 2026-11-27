@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kontena/core/api.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/config.dart';
+import '../../core/passkeys.dart';
 import '../../core/state.dart';
 import '../../core/theme.dart';
 import '../../widgets/face.dart';
@@ -71,6 +72,28 @@ class ProfileScreen extends ConsumerWidget {
           ]),
         ),
         ],
+        const SectionLabel('Security'),
+        KtCard(
+          color: u.b('hasPasskey') ? KT.mint : KT.peach,
+          onTap: u.b('hasPasskey') ? null : () async {
+            final ok = await guarded(context, () async { await Passkeys.enroll(); return true; });
+            if (ok == true && context.mounted) {
+              toast(context, 'Fingerprint confirmation is on');
+              ref.invalidate(meProvider);
+            }
+          },
+          child: Row(children: [
+            Icon(Icons.fingerprint_rounded, color: u.b('hasPasskey') ? KT.green : KT.orange, size: 30),
+            const SizedBox(width: 14),
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(u.b('hasPasskey') ? 'Fingerprint confirmation is on' : 'Confirm payments with your fingerprint', style: KT.h3),
+              Text(u.b('hasPasskey')
+                  ? 'Payments, releases and withdrawals need your fingerprint or face. No passwords, no seed phrase.'
+                  : 'Use your fingerprint or face to approve money moves. Network fees are paid by Kontena.', style: KT.small),
+            ])),
+            if (!u.b('hasPasskey')) const Icon(Icons.chevron_right_rounded),
+          ]),
+        ),
         const SectionLabel('More'),
         KtCard(padding: EdgeInsets.zero, child: Column(children: [
           _Row(Icons.notifications_none_rounded, 'Notifications', () => context.push('/notifications')),

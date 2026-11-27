@@ -5,12 +5,14 @@ import * as paystack from "./paystack";
 import * as fossa from "./fossapay";
 import * as yc from "./yellowcard";
 import { creditWallet, debitWallet, ngn } from "./naira";
+import { syncChain, syncPendingChain, usesChain } from "./chain";
 
 export type Order = {
   id: string; ref: string; store_id: string; buyer_id: string; vendor_id: string; pool_id: string | null; status: string;
   subtotal_cents: number; fee_cents: number; total_cents: number; deposit_cents: number; balance_cents: number;
   funding: string | null; pay_currency: string | null; pay_amount_minor: number | null; paystack_ref: string | null; fossa_ref: string | null;
   accept_by: number; ship_by: number | null; lead_days: number; proof_keys: string; created_at: number; updated_at: number;
+  chain_state?: string; chain_error?: string | null;
 };
 
 const DAY = 86400;
@@ -147,6 +149,7 @@ export async function markFunded(env: Env, orderId: string, how: string) {
   await addEvent(env, orderId, "funded", `Payment received (${how}). Held in escrow.`);
   await notify(env, o.vendor_id, "New order funded", `${o.ref} · ${money(o.total_cents)} is in escrow. Accept to receive your ${money(o.deposit_cents)} deposit.`, orderId);
   await notify(env, o.buyer_id, "Payment received", `${o.ref} is funded and protected until your goods are inspected.`, orderId);
+  await syncChain(env, orderId);
 }
 
 // ---------- vendor + inspection steps ----------
@@ -154,10 +157,12 @@ export async function markFunded(env: Env, orderId: string, how: string) {
 export async function vendorAccept(env: Env, o: Order) {
   const shipBy = now() + o.lead_days * DAY;
   if (!(await transition(env, o.id, "funded", "accepted", `, ship_by=${shipBy}`))) throw bad("Order can't be accepted now");
-  await credit(env, o.vendor_id, o.id, "deposit_release", o.deposit_cents);
+  const onChain = await usesChain(env, o);
+  if (!onChain) await credit(env, o.vendor_id, o.id, "deposit_release", o.deposit_cents); // on-chain orders pay the supplier's Stellar wallet directly
   await revenue(env, "protection_fee", o.fee_cents, { orderId: o.id }); // refundable until the supplier accepts
-  await addEvent(env, o.id, "accepted", `Supplier accepted. ${money(o.deposit_cents)} deposit released.`);
+  await addEvent(env, o.id, "accepted", `Supplier accepted. ${money(o.deposit_cents)} deposit released${onChain ? " to the supplier's Stellar wallet" : ""}.`);
   await notify(env, o.buyer_id, "Supplier accepted your order", `${o.ref}: deposit of ${money(o.deposit_cents)} released. Balance stays locked until inspection.`, o.id);
+  await syncChain(env, o.id);
 }
 
 export async function vendorReady(env: Env, o: Order, proofKeys: string[], note: string) {
@@ -172,17 +177,21 @@ export async function vendorReady(env: Env, o: Order, proofKeys: string[], note:
 export async function inspectionResult(env: Env, o: Order, pass: boolean, note: string) {
   if (pass) {
     if (!(await transition(env, o.id, "inspection", "shipped"))) throw bad("Order is not in inspection");
-    const commission = Math.min(o.balance_cents, pct(o.subtotal_cents, Number(env.SELLER_COMMISSION_PERCENT ?? 0)));
-    await credit(env, o.vendor_id, o.id, "balance_release", o.balance_cents - commission);
+    const onChain = await usesChain(env, o);
+    // the contract pays the full balance to the supplier, so no commission is taken on on-chain orders
+    const commission = onChain ? 0 : Math.min(o.balance_cents, pct(o.subtotal_cents, Number(env.SELLER_COMMISSION_PERCENT ?? 0)));
+    if (!onChain) await credit(env, o.vendor_id, o.id, "balance_release", o.balance_cents - commission);
     await revenue(env, "seller_commission", commission, { orderId: o.id });
     await addEvent(env, o.id, "inspection_passed", note || "Inspection passed. Balance released to supplier.");
     await notify(env, o.vendor_id, "Balance released", `${o.ref}: ${money(o.balance_cents - commission)} is now in your wallet.`, o.id);
     await notify(env, o.buyer_id, "Inspection passed", `${o.ref} passed inspection and is on its way.`, o.id);
+    await syncChain(env, o.id);
   } else {
     if (!(await transition(env, o.id, "inspection", "refunded"))) throw bad("Order is not in inspection");
     await addEvent(env, o.id, "inspection_failed", note || "Inspection failed. Balance refunded.");
     await refundExternal(env, o, o.balance_cents);
     await notify(env, o.buyer_id, "Refund on its way", `${o.ref} failed inspection. ${money(o.balance_cents)} is being refunded.`, o.id);
+    await syncChain(env, o.id);
   }
 }
 
@@ -202,6 +211,17 @@ export async function cancelUnpaid(env: Env, o: Order) {
 /** Sends money back to the buyer on the rail they paid with. Records failures as events for ops to retry. */
 export async function refundExternal(env: Env, o: Order, cents: number) {
   try {
+    // USDC orders held on-chain: the contract itself returns the escrowed part to the buyer's Stellar wallet.
+    if (o.funding === "usdc" && (await usesChain(env, o))) {
+      const buyer = await env.DB.prepare("SELECT stellar_address FROM users WHERE id=?").bind(o.buyer_id).first<{ stellar_address: string | null }>();
+      if (buyer?.stellar_address) {
+        const onChainPart = cents >= o.total_cents ? o.subtotal_cents : Math.min(cents, o.balance_cents);
+        const rest = cents - onChainPart; // the protection fee is not in the contract
+        if (rest > 0) await fossa.sendUsdc(env, { customerId: env.PLATFORM_FOSSA_CUSTOMER_ID, recipient: buyer.stellar_address, amountUsd: rest / 100, memo: o.ref });
+        await addEvent(env, o.id, "refund_sent", `${money(cents)} refunded to the buyer's Stellar wallet by the escrow contract${rest > 0 ? " and Kontena" : ""}`);
+        return;
+      }
+    }
     // Naira orders refund into the buyer's wallet: instant, and it works for orders paid from the wallet itself.
     if (o.pay_currency === "NGN" && o.pay_amount_minor && (o.funding === "wallet" || o.funding === "paystack")) {
       const buyer = await env.DB.prepare("SELECT refund_to FROM users WHERE id=?").bind(o.buyer_id).first<{ refund_to: string | null }>();
@@ -239,6 +259,7 @@ export async function sweepDeadlines(env: Env) {
       await addEvent(env, o.id, "expired", "Supplier did not accept in time. Full refund.");
       await refundExternal(env, o, o.total_cents);
       await notify(env, o.buyer_id, "Order refunded", `${o.ref}: the supplier didn't accept in time. You'll get everything back.`, o.id);
+      await syncChain(env, o.id);
     }
   }
   const { results: late } = await env.DB.prepare("SELECT * FROM orders WHERE status='accepted' AND ship_by IS NOT NULL AND ship_by < ?").bind(t).all<Order>();
@@ -248,8 +269,16 @@ export async function sweepDeadlines(env: Env) {
       await refundExternal(env, o, o.balance_cents);
       await notify(env, o.buyer_id, "Deadline missed: refund sent", `${o.ref}: ${money(o.balance_cents)} is on its way back to you.`, o.id);
       await notify(env, o.vendor_id, "Order closed", `${o.ref} missed the shipping deadline and was refunded.`, o.id);
+      await syncChain(env, o.id);
     }
   }
+  await syncPendingChain(env); // retry any on-chain step that failed earlier
+}
+
+/** An order that could not go on-chain after all: pay the supplier through the internal ledger instead. */
+export async function creditOffchainPayouts(env: Env, o: Order) {
+  if (["accepted", "inspection", "shipped", "delivered"].includes(o.status)) await credit(env, o.vendor_id, o.id, "deposit_release", o.deposit_cents);
+  if (["shipped", "delivered"].includes(o.status)) await credit(env, o.vendor_id, o.id, "balance_release", o.balance_cents);
 }
 
 // ---------- vendor wallet ----------

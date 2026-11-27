@@ -20,7 +20,7 @@ app.use("*", cors({
     const ok = [c.env.APP_URL, c.env.SITE_URL, "https://usekontena.web.app", "https://kontena.app", "https://kontena.store", "https://www.kontena.store", "http://localhost:8080", "http://localhost:5000"];
     return ok.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin) ? origin : "";
   },
-  allowHeaders: ["Authorization", "Content-Type"],
+  allowHeaders: ["Authorization", "Content-Type", "X-Passkey-Token"],
   allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
 }));
 

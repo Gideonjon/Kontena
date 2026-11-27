@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import type { App } from "./types";
 import { fxRate, notFound } from "../lib/util";
+import { chainEnabled, explorerContract, operatorAddress } from "../lib/stellar";
 
 export const pub = new Hono<App>();
 
@@ -18,6 +19,12 @@ pub.get("/download/kontena.apk", async (c) => {
     "Cache-Control": "public, max-age=300",
   } });
 });
+
+/** Public: where Kontena's escrow lives on Stellar, so anyone can check it. */
+pub.get("/stellar", (c) => c.json(chainEnabled(c.env) ? {
+  enabled: true, network: c.env.STELLAR_NETWORK ?? "testnet", contract: c.env.ESCROW_CONTRACT_ID, contractUrl: explorerContract(c.env),
+  operator: operatorAddress(c.env), usdc: c.env.USDC_ASSET, ngn: c.env.NGN_ASSET ?? null, feesPaidBy: "Kontena",
+} : { enabled: false }));
 
 pub.get("/fx", (c) => c.json({ USD_NGN: fxRate(c.env, "NGN"), USD_GHS: fxRate(c.env, "GHS"), spreadPercent: 1.5 }));
 

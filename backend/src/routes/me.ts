@@ -8,6 +8,8 @@ import * as paystack from "../lib/paystack";
 import * as fossa from "../lib/fossapay";
 import { isAdmin } from "../lib/auth";
 import type { Env } from "../lib/env";
+import * as pk from "../lib/passkeys";
+import { sponsor } from "../lib/stellar";
 
 export const me = new Hono<App>();
 
@@ -20,7 +22,33 @@ const publicUser = (u: User, env: Env) => ({
 me.get("/me", async (c) => {
   const u = c.get("user");
   const store = await c.env.DB.prepare("SELECT id,slug,name FROM stores WHERE owner_id=?").bind(u.id).first();
-  return c.json({ user: publicUser(u, c.env), store });
+  return c.json({ user: { ...publicUser(u, c.env), hasPasskey: await pk.hasPasskey(c.env, u.id) }, store });
+});
+
+// ---------- passkeys: fingerprint / face confirmation ----------
+me.get("/passkeys", async (c) => c.json({ enrolled: await pk.hasPasskey(c.env, c.get("user").id) }));
+me.post("/passkeys/register/options", async (c) => c.json(await pk.registrationOptions(c.env, c.get("user"), c.req.header("Origin"))));
+me.post("/passkeys/register/verify", async (c) => {
+  const b = await c.req.json<{ response: Parameters<typeof pk.registerVerify>[2]; label?: string }>();
+  return c.json(await pk.registerVerify(c.env, c.get("user"), b.response, b.label ?? "", c.req.header("Origin")));
+});
+me.post("/passkeys/auth/options", async (c) => c.json(await pk.authOptions(c.env, c.get("user"), c.req.header("Origin"))));
+me.post("/passkeys/auth/verify", async (c) => {
+  const b = await c.req.json<{ response: Parameters<typeof pk.authVerify>[2] }>();
+  return c.json(await pk.authVerify(c.env, c.get("user"), b.response, c.req.header("Origin")));
+});
+me.delete("/passkeys", async (c) => {
+  const u = c.get("user");
+  await pk.requirePasskeyIfEnrolled(c.env, u.id, c.req.header("X-Passkey-Token"), "passkeys:remove");
+  await pk.removePasskeys(c.env, u.id);
+  return c.json({ ok: true });
+});
+
+/** Kontena pays the network fee for a transaction the user signed with their own wallet. */
+me.post("/stellar/sponsor", async (c) => {
+  const b = await c.req.json<{ xdr: string }>();
+  if (!b.xdr) throw bad("xdr is required");
+  return c.json({ hash: await sponsor(c.env, b.xdr) });
 });
 
 me.patch("/me", async (c) => {

@@ -22,6 +22,18 @@ FOSSAPAY_WALLETS_ENABLED = "true"       # that wallet's G... address
 OFFRAMP_PROVIDER = "yellowcard"              # yellowcard | manual
 YELLOWCARD_BASE = "https://sandbox.api.yellowcard.io"
 
+# ---- Stellar on-chain escrow (scripts/stellar/deploy-testnet.sh prints these). Leave unset to keep escrow off-chain.
+# STELLAR_NETWORK = "testnet"                 # testnet | public
+# ESCROW_CONTRACT_ID = "C..."                 # kontena-escrow contract
+# USDC_ASSET = "USDC:G..."                    # token the contract holds (Circle USDC on mainnet)
+# NGN_ASSET = "NGN:G..."                      # NGN anchor asset; naira orders convert to USDC by path payment
+# PATH_SLIPPAGE_PERCENT = "2"
+# Secret: ESCROW_OPERATOR_SECRET (wrangler secret put ESCROW_OPERATOR_SECRET). It signs every escrow step and pays all network fees.
+
+# ---- Passkeys (fingerprint / face confirmation). Works on whichever site the app is opened from.
+# PASSKEY_MODE = "required"                   # users who set up a passkey must confirm payments, releases and withdrawals
+# Secret (optional): PASSKEY_SECRET
+
 [[d1_databases]]
 binding = "DB"
 database_name = "kontena"

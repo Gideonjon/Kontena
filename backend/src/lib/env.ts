@@ -33,6 +33,28 @@ FOSSAPAY_WALLETS_ENABLED: string;  /** Stellar address of that treasury wallet *
   ADMIN_UIDS?: string;
   /** buyers may approve inspections themselves up to this many USD cents */
   INSPECTION_BUYER_MAX_CENTS?: string;
+  // ---- Stellar on-chain escrow (all optional: leave unset to keep escrow off-chain) ----
+  /** testnet | public */
+  STELLAR_NETWORK?: string;
+  SOROBAN_RPC_URL?: string;
+  HORIZON_URL?: string;
+  /** C... id of the deployed kontena-escrow contract */
+  ESCROW_CONTRACT_ID?: string;
+  /** secret S... of the escrow operator: funds escrows, signs inspections, pays every network fee (wrangler secret) */
+  ESCROW_OPERATOR_SECRET?: string;
+  /** USDC asset as CODE:ISSUER (the contract's token) */
+  USDC_ASSET?: string;
+  /** NGN anchor asset as CODE:ISSUER. When set, naira orders are converted to USDC with a Stellar path payment */
+  NGN_ASSET?: string;
+  /** max slippage for NGN->USDC conversion, percent (default 2) */
+  PATH_SLIPPAGE_PERCENT?: string;
+  // ---- passkeys ----
+  /** WebAuthn relying party id, e.g. kontena.store (must match the site the app runs on) */
+  PASSKEY_RP_ID?: string;
+  /** "required" makes a passkey confirmation mandatory for money actions once a user has a passkey (default) */
+  PASSKEY_MODE?: string;
+  /** HMAC secret for passkey confirmation tokens (wrangler secret; optional) */
+  PASSKEY_SECRET?: string;
 }
 
 export type User = {

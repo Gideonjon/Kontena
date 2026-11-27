@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/api.dart';
 import '../../core/format.dart';
 import '../../core/theme.dart';
@@ -96,6 +97,10 @@ class _OrderDetailScreenState extends ConsumerState<OrderDetailScreen> {
           _Next(status: status, isBuyer: isBuyer, deposit: deposit, balance: balance, shipBy: o.i('ship_by')),
           const SizedBox(height: 14),
           _Escrow(status: status, total: total, deposit: deposit, balance: balance, fee: o.i('fee_cents')),
+          if (o['chain'] is Map && o.m('chain').s('state') != 'offchain' && status != 'awaiting_payment' && status != 'cancelled') ...[
+            const SizedBox(height: 14),
+            _StellarProof(o.m('chain')),
+          ],
           if (o['pool'] is Map) ...[
             const SizedBox(height: 14),
             KtCard(child: Row(children: [
@@ -247,6 +252,73 @@ class _Escrow extends StatelessWidget {
   }
 }
 
+/// Shows that the money sits in a Stellar smart contract, with every step linked to the public explorer.
+class _StellarProof extends StatelessWidget {
+  final Map<String, dynamic> c;
+  const _StellarProof(this.c);
+
+  static const _titles = {
+    'convert': 'Naira converted to USDC',
+    'fund': 'Locked in the smart contract',
+    'accept': '30% deposit paid to supplier',
+    'release': '70% balance paid after inspection',
+    'refund': 'Refunded by the contract',
+    'expire': 'Deadline refund by the contract',
+  };
+  static const _icons = {
+    'convert': Icons.currency_exchange_rounded, 'fund': Icons.lock_rounded, 'accept': Icons.handshake_rounded,
+    'release': Icons.verified_rounded, 'refund': Icons.replay_rounded, 'expire': Icons.timer_off_rounded,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final txs = c.list('txs');
+    final state = c.s('state');
+    final testnet = c.s('network') != 'public';
+    final lead = switch (state) {
+      'funded' => 'Your money is locked in a smart contract. It can only go to the supplier or back to you.',
+      'accepted' => 'Deposit paid. The balance stays locked in the contract until inspection passes.',
+      'released' => 'Paid in full by the contract after inspection.',
+      'refunded' => 'The contract returned the locked money.',
+      _ => 'Recording this order on Stellar…',
+    };
+    return KtCard(color: KT.ink, child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        const Icon(Icons.shield_rounded, color: KT.orange, size: 20),
+        const SizedBox(width: 8),
+        Expanded(child: Text('PROTECTED ON STELLAR', style: KT.label.copyWith(color: Colors.white))),
+        if (testnet) Text('TESTNET', style: KT.small.copyWith(color: KT.orange)),
+      ]),
+      const SizedBox(height: 10),
+      Text(lead, style: KT.body.copyWith(color: const Color(0xFFD5D6DA))),
+      if (c.s('error').isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text('Retrying on Stellar. Your money is safe.', style: KT.small.copyWith(color: KT.orange))),
+      if (txs.isNotEmpty) const SizedBox(height: 12),
+      for (final t in txs) InkWell(
+        onTap: () => launchUrl(Uri.parse(t.s('url')), mode: LaunchMode.externalApplication),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Row(children: [
+          Icon(_icons[t.s('step')] ?? Icons.link_rounded, color: KT.orange, size: 18),
+          const SizedBox(width: 10),
+          Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(_titles[t.s('step')] ?? t.s('step'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+            Text('${t.s('hash').substring(0, 8)}…  ·  ${dateShort(t.i('at'))}', style: KT.small.copyWith(color: const Color(0xFFA9ABB2))),
+          ])),
+          Text('View on Stellar ↗', style: KT.small.copyWith(color: KT.orange, fontWeight: FontWeight.w800)),
+        ])),
+      ),
+      if (c.s('contractUrl').isNotEmpty) Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: TextButton.icon(
+          style: TextButton.styleFrom(foregroundColor: Colors.white, padding: EdgeInsets.zero),
+          onPressed: () => launchUrl(Uri.parse(c.s('contractUrl')), mode: LaunchMode.externalApplication),
+          icon: const Icon(Icons.open_in_new_rounded, size: 16),
+          label: const Text('Check the escrow contract yourself', style: TextStyle(fontWeight: FontWeight.w700)),
+        ),
+      ),
+    ]));
+  }
+}
+
 class _Legend extends StatelessWidget {
   final Color c;
   final String a, b;
@@ -269,7 +341,9 @@ class _EventRow extends StatelessWidget {
     final icon = switch (t) {
       'created' => Icons.add_circle_outline_rounded, 'funded' || 'payment_sent' => Icons.lock_rounded, 'accepted' => Icons.handshake_rounded,
       'inspection_requested' => Icons.photo_camera_rounded, 'inspection_passed' => Icons.verified_rounded, 'delivered' => Icons.check_circle_rounded,
-      'refund_sent' => Icons.replay_rounded, _ => Icons.circle_outlined,
+      'refund_sent' => Icons.replay_rounded,
+      'chain_convert' || 'chain_fund' || 'chain_accept' || 'chain_release' || 'chain_refund' || 'chain_expire' => Icons.shield_rounded,
+      _ => Icons.circle_outlined,
     };
     return Padding(
       padding: EdgeInsets.only(bottom: last ? 0 : 14),

@@ -3,6 +3,7 @@ import type { App } from "./types";
 import { isAdmin } from "../lib/auth";
 import { bad, forbidden, notFound } from "../lib/util";
 import { finishWithdrawal } from "../lib/orders";
+import { syncChain, syncPendingChain } from "../lib/chain";
 
 export const admin = new Hono<App>();
 
@@ -12,6 +13,10 @@ admin.use("*", async (c, next) => {
 });
 
 const DAY = 86400;
+
+/** Retry on-chain escrow steps: one order, or every order that is behind. */
+admin.post("/chain/sync", async (c) => c.json({ checked: await syncPendingChain(c.env, 50) }));
+admin.post("/orders/:id/chain/sync", async (c) => { await syncChain(c.env, c.req.param("id")); return c.json({ ok: true }); });
 
 admin.get("/summary", async (c) => {
   const db = c.env.DB;

@@ -15,6 +15,8 @@ import 'screens/shared/order_detail.dart';
 import 'screens/shared/wallet.dart';
 import 'screens/shared/profile.dart';
 import 'screens/shared/notifications.dart';
+import 'screens/shared/inbox.dart';
+import 'screens/shared/chat_screen.dart';
 import 'screens/vendor/vendor_shell.dart';
 import 'screens/vendor/vendor_home.dart';
 import 'screens/vendor/vendor_orders.dart';
@@ -61,6 +63,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/s/:slug', builder: (_, s) => StorePage(slug: s.pathParameters['slug']!)),
       GoRoute(path: '/order/:id', builder: (_, s) => OrderDetailScreen(id: s.pathParameters['id']!)),
       GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
+      GoRoute(path: '/chat/:kind/:id', builder: (_, s) => ChatScreen(kind: s.pathParameters['kind']!, id: s.pathParameters['id']!, product: s.extra is Map<String, dynamic> ? s.extra as Map<String, dynamic> : null)),
       GoRoute(path: '/checkout', builder: (_, s) => CheckoutScreen(args: s.extra as CheckoutArgs)),
       GoRoute(path: '/v/setup', builder: (_, __) => const SetupStoreScreen()),
       GoRoute(path: '/v/product', builder: (_, s) => ProductFormScreen(existing: s.extra as Map<String, dynamic>?)),
@@ -70,6 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: '/c/explore', builder: (_, __) => const ExploreScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/c/orders', builder: (_, __) => const OrdersListScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/c/messages', builder: (_, __) => const InboxScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/c/wallet', builder: (_, __) => const WalletScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/c/me', builder: (_, __) => const ProfileScreen())]),
         ],
@@ -79,6 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(routes: [GoRoute(path: '/v/home', builder: (_, __) => const VendorHomeScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/v/orders', builder: (_, __) => const VendorOrdersScreen())]),
+          StatefulShellBranch(routes: [GoRoute(path: '/v/messages', builder: (_, __) => const InboxScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/v/store', builder: (_, __) => const VendorStoreScreen())]),
           StatefulShellBranch(routes: [GoRoute(path: '/v/wallet', builder: (_, __) => const WalletScreen(vendor: true))]),
         ],

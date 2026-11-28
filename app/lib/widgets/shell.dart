@@ -7,8 +7,13 @@ class NavItem {
   final IconData icon;
   final IconData activeIcon;
   final String label;
-  const NavItem(this.icon, this.activeIcon, this.label);
+  final int badge; // unread count shown on the tab icon
+  const NavItem(this.icon, this.activeIcon, this.label, {this.badge = 0});
 }
+
+Widget _badged(NavItem item, Widget icon) => item.badge > 0
+    ? Badge(label: Text(item.badge > 9 ? '9+' : '${item.badge}'), backgroundColor: KT.orange, textColor: Colors.white, child: icon)
+    : icon;
 
 /// Bottom bar on phones, side rail on wide screens (web / tablet).
 class AdaptiveShell extends StatelessWidget {
@@ -69,7 +74,7 @@ class _BarItem extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(selected ? item.activeIcon : item.icon, color: c, size: 25),
+          _badged(item, Icon(selected ? item.activeIcon : item.icon, color: c, size: 25)),
           const SizedBox(height: 3),
           Text(item.label, style: TextStyle(color: c, fontSize: 11, fontWeight: FontWeight.w800)),
         ]),
@@ -93,7 +98,7 @@ class _RailItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
               child: Row(children: [
-                Icon(selected ? item.activeIcon : item.icon, color: selected ? KT.orange : KT.grey, size: 22),
+                _badged(item, Icon(selected ? item.activeIcon : item.icon, color: selected ? KT.orange : KT.grey, size: 22)),
                 const SizedBox(width: 12),
                 Text(item.label, style: TextStyle(fontWeight: FontWeight.w800, color: selected ? KT.ink : KT.grey)),
               ]),

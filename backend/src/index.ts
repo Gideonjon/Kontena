@@ -12,6 +12,7 @@ import { orders, withdrawals } from "./routes/orders";
 import { webhooks } from "./routes/webhooks";
 import { admin } from "./routes/admin";
 import { naira } from "./routes/naira";
+import { inbox } from "./routes/inbox";
 
 const app = new Hono<App>();
 
@@ -35,6 +36,7 @@ authed.route("/orders", orders);
 authed.route("/withdrawals", withdrawals);
 authed.route("/admin", admin);
 authed.route("/naira", naira);
+authed.route("/inbox", inbox);
 app.route("/", authed);
 
 app.onError((err, c) => {

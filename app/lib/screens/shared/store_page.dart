@@ -42,6 +42,14 @@ class _StorePageState extends ConsumerState<StorePage> {
     return false;
   }
 
+  /// Opens (or reopens) the chat with this supplier. A tapped product rides along as a card on the first message.
+  Future<void> _message(Map<String, dynamic> store, [Map<String, dynamic>? product]) async {
+    if (!_requireAuth()) return;
+    final r = await guarded(context, () => Api.i.post('/inbox/start', {'storeId': store.s('id')}));
+    if (r == null || !mounted) return;
+    context.push('/chat/inquiry/${r.s('id')}', extra: product);
+  }
+
   void _checkout(Map<String, dynamic> store, List<Map<String, dynamic>> products) {
     if (!_requireAuth()) return;
     final lines = [
@@ -86,7 +94,7 @@ class _StorePageState extends ConsumerState<StorePage> {
               onRefresh: () async => ref.refresh(storeProvider(widget.slug).future),
               child: ListView(padding: EdgeInsets.fromLTRB(20, 0, 20, subtotal > 0 ? 120 : 40), children: [
                 Constrain(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  _Header(store),
+                  _Header(store, onMessage: () => _message(store)),
                   if (pools.isNotEmpty) ...[
                     const SectionLabel('Open group orders'),
                     for (final pl in pools) _PoolCard(pool: pl, product: products.firstWhere((p) => p.s('id') == pl.s('product_id'), orElse: () => {}),
@@ -96,7 +104,7 @@ class _StorePageState extends ConsumerState<StorePage> {
                   if (products.isEmpty)
                     const EmptyState(icon: Icons.inventory_2_outlined, title: 'No products yet', body: 'This supplier hasn\'t listed anything yet.')
                   else
-                    for (final p in products) _ProductTile(p, qty: cart[p.s('id')] ?? 0, onQty: (q) => _setQty(p, q)),
+                    for (final p in products) _ProductTile(p, qty: cart[p.s('id')] ?? 0, onQty: (q) => _setQty(p, q), onAsk: () => _message(store, p)),
                   const SizedBox(height: 18),
                   KtCard(color: KT.mint, child: Row(children: [
                     const Icon(Icons.lock_rounded, color: KT.green),
@@ -123,7 +131,8 @@ class _StorePageState extends ConsumerState<StorePage> {
 
 class _Header extends StatelessWidget {
   final Map<String, dynamic> s;
-  const _Header(this.s);
+  final VoidCallback onMessage;
+  const _Header(this.s, {required this.onMessage});
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -143,6 +152,8 @@ class _Header extends StatelessWidget {
         ])),
       ]),
       if (s.s('bio').isNotEmpty) ...[const SizedBox(height: 14), Text(s.s('bio'), style: KT.body)],
+      const SizedBox(height: 14),
+      KtButton('Message supplier', kind: BtnKind.soft, icon: Icons.chat_bubble_outline_rounded, expand: false, onPressed: onMessage),
     ]);
   }
 }
@@ -151,7 +162,8 @@ class _ProductTile extends StatelessWidget {
   final Map<String, dynamic> p;
   final int qty;
   final void Function(int) onQty;
-  const _ProductTile(this.p, {required this.qty, required this.onQty});
+  final VoidCallback onAsk;
+  const _ProductTile(this.p, {required this.qty, required this.onQty, required this.onAsk});
   @override
   Widget build(BuildContext context) {
     final min = p.i('min_qty');
@@ -170,7 +182,10 @@ class _ProductTile extends StatelessWidget {
             Text('${usdShort(p.i('price_cents'))} each · min $min · ~${p.i('lead_days')} days', style: KT.small),
             const SizedBox(height: 10),
             qty == 0
-                ? KtButton('Add $min', kind: BtnKind.soft, expand: false, onPressed: () => onQty(min))
+                ? Wrap(spacing: 8, runSpacing: 8, children: [
+                    KtButton('Add $min', kind: BtnKind.soft, expand: false, onPressed: () => onQty(min)),
+                    KtButton('Ask', kind: BtnKind.ghost, icon: Icons.chat_bubble_outline_rounded, expand: false, onPressed: onAsk),
+                  ])
                 : Row(children: [
                     _Step(Icons.remove_rounded, () => onQty(qty - (qty > min ? 1 : min))),
                     SizedBox(width: 56, child: Text('$qty', textAlign: TextAlign.center, style: KT.h3)),

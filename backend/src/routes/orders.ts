@@ -5,6 +5,7 @@ import { isAdmin } from "../lib/auth";
 import { chainInfo } from "../lib/chain";
 import { requirePasskeyIfEnrolled } from "../lib/passkeys";
 import { listMessages, postMessage } from "../lib/messages";
+import { markRead } from "../lib/inbox";
 import {
   cancelUnpaid, confirmDelivery, createOrder, getOrder, inspectionResult, startCardPayment, startUsdcPayment, startWalletPayment, withdraw, type Order, type WithdrawInput,
 } from "../lib/orders";
@@ -63,7 +64,12 @@ orders.post("/:id/pay", async (c) => {
   throw bad("method must be card, usdc or wallet");
 });
 
-orders.get("/:id/messages", async (c) => c.json({ messages: await listMessages(c.env, await load(c, "any"), c.get("user")) }));
+orders.get("/:id/messages", async (c) => {
+  const o = await load(c, "any");
+  const messages = await listMessages(c.env, o, c.get("user"));
+  await markRead(c.env, c.get("user"), "order", o.id);
+  return c.json({ messages });
+});
 orders.post("/:id/messages", async (c) => {
   const b = await c.req.json<{ body?: string; mediaKey?: string }>();
   return c.json(await postMessage(c.env, await load(c, "any"), c.get("user"), b));

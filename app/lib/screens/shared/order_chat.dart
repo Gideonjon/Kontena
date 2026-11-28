@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/api.dart';
 import '../../core/format.dart';
@@ -68,7 +69,7 @@ class _OrderChatState extends ConsumerState<OrderChat> {
     final shown = msgs.length > 20 ? msgs.sublist(msgs.length - 20) : msgs;
     return KtCard(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       if (shown.isEmpty) Padding(padding: const EdgeInsets.only(bottom: 10), child: Text('No messages yet. Ask a question or share an update about this order.', style: KT.small)),
-      for (final m in shown) _Bubble(m),
+      for (final m in shown) ChatBubble(m),
       Row(children: [
         IconButton(onPressed: sending ? null : () => _attach(false), icon: const Icon(Icons.photo_camera_rounded), tooltip: 'Send a photo'),
         IconButton(onPressed: sending ? null : () => _attach(true), icon: const Icon(Icons.videocam_rounded), tooltip: 'Send a video'),
@@ -82,9 +83,11 @@ class _OrderChatState extends ConsumerState<OrderChat> {
   }
 }
 
-class _Bubble extends StatelessWidget {
+/// One message: text, a photo or video, and an optional product card. `slug` lets a product card open the store.
+class ChatBubble extends StatelessWidget {
   final Map<String, dynamic> m;
-  const _Bubble(this.m);
+  final String? slug;
+  const ChatBubble(this.m, {super.key, this.slug});
   @override
   Widget build(BuildContext context) {
     final mine = m.b('mine');
@@ -110,10 +113,35 @@ class _Bubble extends StatelessWidget {
               : GestureDetector(
                   onTap: () => showDialog(context: context, builder: (_) => Dialog(child: InteractiveViewer(child: Image.network(Api.mediaUrl(key))))),
                   child: ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(Api.mediaUrl(key), width: 200, fit: BoxFit.cover)))),
+          if (m.m('product').isNotEmpty) Padding(padding: const EdgeInsets.only(top: 6), child: _ProductCard(m.m('product'), onTap: slug == null ? null : () => context.push('/s/$slug'))),
           if (m.s('body').isNotEmpty) Padding(padding: const EdgeInsets.only(top: 6), child: Text(m.s('body'), style: TextStyle(color: text, height: 1.35))),
           Padding(padding: const EdgeInsets.only(top: 6), child: Text(dateShort(m.i('at')), style: TextStyle(fontSize: 11, color: mine ? const Color(0xFFA9ABB2) : KT.grey))),
         ]),
       ),
     );
   }
+}
+
+class _ProductCard extends StatelessWidget {
+  final Map<String, dynamic> p;
+  final VoidCallback? onTap;
+  const _ProductCard(this.p, {this.onTap});
+  @override
+  Widget build(BuildContext context) => Material(
+        color: Colors.white, borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12), onTap: onTap,
+          child: Padding(padding: const EdgeInsets.all(8), child: Row(mainAxisSize: MainAxisSize.min, children: [
+            ClipRRect(borderRadius: BorderRadius.circular(8), child: p.s('image_key').isNotEmpty
+                ? Image.network(Api.mediaUrl(p.s('image_key')), width: 44, height: 44, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _ph())
+                : _ph()),
+            const SizedBox(width: 10),
+            Flexible(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+              Text(p.s('name'), maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: KT.ink, fontWeight: FontWeight.w800)),
+              Text('${usdShort(p.i('price_cents'))} each', style: const TextStyle(color: KT.grey, fontSize: 12)),
+            ])),
+          ])),
+        ),
+      );
+  Widget _ph() => Container(width: 44, height: 44, color: KT.peach, child: const Icon(Icons.inventory_2_rounded, color: KT.orange, size: 22));
 }

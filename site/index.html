@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kontena: buy together, pay safely</title>
-<meta name="description" content="Group-buy and trade escrow for importers in Nigeria and Ghana. Pay 30% when the supplier accepts and the balance only after inspection.">
-<meta property="og:title" content="Kontena: buy together, pay safely">
+<title>Kontena: group buying and trade escrow for importers in Nigeria and Ghana</title>
+<meta name="description" content="Chat with suppliers, group-buy, and pay through escrow on Stellar. Pay 30% when the supplier accepts and the balance only after inspection. For importers in Nigeria and Ghana.">
+<meta property="og:title" content="Kontena: import with peace of mind">
 <meta property="og:description" content="Staged escrow for importers in Nigeria and Ghana. The balance is released only after your goods are inspected.">
 <meta property="og:image" content="https://kontena.store/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -54,6 +54,89 @@ button{font-family:inherit}
 .kt-pop-b{animation:ktPop 6s ease-in-out 3s infinite both}
 .kt-spin{animation:ktSpin 30s linear infinite;transform-origin:center;transform-box:fill-box}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+/* ---- landing revamp ---- */
+.k-wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.k-sec{padding-top:104px;padding-bottom:104px}
+.k-eyebrow{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#FF5B14}
+.k-h2{margin:0;font-weight:800;font-size:clamp(34px,4.6vw,56px);line-height:1.02;letter-spacing:-.05em}
+.k-lead{margin:0;font-size:18px;line-height:1.55;color:#5C5F66}
+.k-center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.k-center .k-lead{max-width:620px}
+.k-badge{display:inline-flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;border-radius:999px;background:#FFEFE6;color:#101114;text-decoration:none;font-weight:700;font-size:14px;line-height:1.3;text-align:left}
+.k-new{background:#FF5B14;color:#fff;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:800;letter-spacing:.05em;flex:none}
+.k-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:6px}
+.k-chip{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:#F3F3F1;font-weight:700;font-size:14px;color:#101114}
+.k-chip i{width:8px;height:8px;border-radius:50%;background:#1FA463;display:inline-block}
+.k-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:48px}
+.k-step{padding:30px;border-radius:28px;display:flex;flex-direction:column;gap:12px;text-align:left}
+.k-num{width:44px;height:44px;border-radius:999px;background:#101114;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
+.k-step h3,.k-feat h3{margin:0;font-weight:800;font-size:24px;letter-spacing:-.035em;line-height:1.15}
+.k-step p,.k-feat p{margin:0;font-size:16px;line-height:1.5;color:#4A4D55}
+.k-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:52px}
+@media (max-width:980px){.k-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:620px){.k-grid{grid-template-columns:1fr}}
+.k-feat{padding:28px;border-radius:28px;display:flex;flex-direction:column;gap:12px;background:#F7F7F5;text-decoration:none;color:inherit;text-align:left}
+.k-ico{width:54px;height:54px;border-radius:18px;background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px}
+.k-ico svg{width:26px;height:26px;fill:none;stroke:#101114;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.k-more{margin-top:auto;padding-top:6px;font-weight:800;font-size:15px;display:inline-flex;gap:6px;align-items:center}
+.k-more::after{content:"→";transition:transform .2s ease}
+.k-feat:hover .k-more::after{transform:translateX(4px)}
+.k-tag{display:inline-block;align-self:flex-start;background:#FF5B14;color:#fff;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:800;letter-spacing:.05em}
+.k-split{display:flex;flex-wrap:wrap;align-items:center;gap:48px 80px}
+.k-split>.k-text{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:22px}
+.k-split>.k-visual{flex:1 1 380px;min-width:0;display:flex;justify-content:center;position:relative;padding:24px 0}
+.k-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px;font-size:18px;line-height:1.5}
+.k-list li{display:flex;gap:14px}
+.k-list li::before{content:"";flex:none;width:26px;height:26px;border-radius:999px;margin-top:1px;background:#101114 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/13px no-repeat}
+.k-cta{display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 30px;border-radius:999px;background:#101114;color:#fff;text-decoration:none;font-weight:700;font-size:17px;align-self:flex-start}
+.k-cta.light{background:#fff;color:#101114}
+.k-phone{width:284px;height:560px;border-radius:46px;background:#101114;padding:9px;box-shadow:0 30px 70px rgba(16,17,20,.22),inset 0 0 0 1.5px #3A3D45;flex:none;position:relative;z-index:1}
+.k-screen{position:relative;width:100%;height:100%;border-radius:36px;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+.k-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:82px;height:23px;border-radius:999px;background:#000;z-index:2}
+.k-chat-head{display:flex;align-items:center;gap:10px;padding:44px 14px 12px;border-bottom:1px solid #ECECE9;background:#fff}
+.k-av{width:34px;height:34px;border-radius:50%;background:#FFD9C7;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none}
+.k-chat-head b{display:block;font-size:14px;letter-spacing:-.02em}
+.k-chat-head small{display:block;font-size:11px;color:#1FA463;font-weight:700}
+.k-msgs{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:9px;background:#F7F7F5;overflow:hidden}
+.k-b{max-width:84%;padding:9px 12px;border-radius:16px;font-size:12.5px;line-height:1.38;display:flex;flex-direction:column;gap:6px}
+.k-b.me{align-self:flex-end;background:#101114;color:#fff;border-bottom-right-radius:5px}
+.k-b.them{align-self:flex-start;background:#fff;color:#101114;border-bottom-left-radius:5px;box-shadow:0 1px 0 #ECECE9}
+.k-pc{display:flex;gap:8px;align-items:center;background:#fff;color:#101114;border-radius:10px;padding:6px}
+.k-pc b{display:block;font-size:11.5px}.k-pc small{display:block;font-size:10.5px;color:#7A7D84}
+.k-pimg{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#FFC9AD,#FF5B14);flex:none}
+.k-vid{height:74px;border-radius:10px;background:linear-gradient(135deg,#2A2B31,#4A4D55);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;gap:6px}
+.k-vid::before{content:"";border-left:12px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent}
+.k-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.k-photos i{height:44px;border-radius:7px;background:linear-gradient(135deg,#FFE3D3,#FFB38A)}
+.k-photos i:nth-child(2){background:linear-gradient(135deg,#D5E4FF,#9DBBFF)}.k-photos i:nth-child(3){background:linear-gradient(135deg,#CDEFDD,#8FD8B3)}
+.k-compose{display:flex;gap:8px;align-items:center;padding:10px 12px 14px;background:#fff;border-top:1px solid #ECECE9;font-size:12px;color:#9A9DA4}
+.k-compose span{flex:1;background:#F3F3F1;border-radius:999px;padding:9px 12px}
+.k-compose em{width:30px;height:30px;border-radius:50%;background:#FF5B14;flex:none}
+.k-inbox{align-self:flex-end;margin:0 0 70px -16px;width:210px;background:#fff;border-radius:22px;box-shadow:0 22px 50px rgba(16,17,20,.16);padding:12px;z-index:2;display:flex;flex-direction:column;gap:2px}
+.k-inbox .row{display:flex;gap:10px;align-items:center;padding:8px;border-radius:14px}
+.k-inbox .row.u{background:#FFF4EE}
+.k-inbox .row b{display:block;font-size:12.5px;letter-spacing:-.02em}.k-inbox .row small{display:block;font-size:11px;color:#7A7D84;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96px}
+.k-inbox .dot{margin-left:auto;background:#FF5B14;color:#fff;border-radius:99px;font-size:10.5px;font-weight:800;padding:2px 7px}
+.k-cap{font-size:12px;color:#8A8D94;text-align:center;margin-top:10px}
+.k-wallet{width:min(100%,380px);border-radius:32px;background:#101114;color:#fff;padding:28px;display:flex;flex-direction:column;gap:22px;box-shadow:0 30px 70px rgba(16,17,20,.2)}
+.k-wallet .bal{font-weight:800;font-size:44px;letter-spacing:-.05em;line-height:1}
+.k-wallet small{color:#9A9DA4;font-weight:700;font-size:13px}
+.k-wallet .acct{background:#1B1C21;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:3px;font-size:13px;color:#B8BBC2}
+.k-wallet .acct b{color:#fff;font-size:18px;letter-spacing:.04em}
+.k-wallet .btns{display:flex;gap:10px}.k-wallet .btns span{flex:1;text-align:center;padding:13px;border-radius:999px;font-weight:800;font-size:14px;background:#FF5B14;color:#101114}.k-wallet .btns span+span{background:#2A2B31;color:#fff}
+.k-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:48px;counter-reset:f}
+.k-node{position:relative;padding:24px;border-radius:26px;background:#F7F7F5;display:flex;flex-direction:column;gap:8px;text-align:left}
+.k-node::before{counter-increment:f;content:counter(f);width:34px;height:34px;border-radius:50%;background:#101114;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:15px}
+.k-node b{font-size:19px;letter-spacing:-.03em}.k-node span{font-size:15px;line-height:1.45;color:#5C5F66}
+.k-verify{margin-top:20px;padding:26px 28px;border-radius:28px;background:#101114;color:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px 32px;text-align:left}
+.k-verify .t{flex:1 1 360px;display:flex;flex-direction:column;gap:8px}
+.k-verify b{font-size:22px;letter-spacing:-.035em}
+.k-verify code{font-family:ui-monospace,Menlo,monospace;font-size:13px;background:#1B1C21;border-radius:10px;padding:8px 12px;color:#FFB38A;word-break:break-all}
+.k-verify p{margin:0;color:#B8BBC2;font-size:15px;line-height:1.5}
+.k-net{display:inline-flex;align-items:center;gap:7px;background:#2A2B31;color:#fff;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:800;align-self:flex-start}
+.k-net i{width:8px;height:8px;border-radius:50%;background:#FFC83D}
+.k-sup{border-radius:40px;background:#FFEFE6;padding:clamp(32px,5vw,64px)}
+@media (max-width:760px){.k-sec{padding-top:72px;padding-bottom:72px}.k-inbox{display:none}}
 </style>
 <style>[hidden]{display:none!important}html{scroll-behavior:smooth;scroll-padding-top:12px}</style>
 </head>
@@ -72,6 +155,7 @@ button{font-family:inherit}
 <div class="kt-links" style="font-size: 15px; font-weight: 600; color: #3A3D44">
 <a class="kt-link" href="#how" style="text-decoration: none">How it works</a>
 <a class="kt-link" href="#showcase" style="text-decoration: none">Features</a>
+<a class="kt-link" href="#messaging" style="text-decoration: none">Messaging</a>
 <a class="kt-link" href="#safe" style="text-decoration: none">Safety</a>
 <a class="kt-link" href="#faq" style="text-decoration: none">FAQ</a>
 </div>
@@ -86,6 +170,8 @@ button{font-family:inherit}
 <div id="menu" hidden style="max-width: 1240px; margin: 0 auto; padding: 0 24px 16px; display: flex; flex-direction: column; font-size: 18px; font-weight: 700">
 <a href="#how" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">How it works</a>
 <a href="#showcase" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">Features</a>
+<a href="#messaging" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">Messaging</a>
+<a href="#suppliers" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">For suppliers</a>
 <a href="#safe" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">Safety</a>
 <a href="#faq" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">FAQ</a>
 <a href="/login" data-close-menu style="padding: 14px 0; border-top: 1px solid #ECECE9; text-decoration: none">Log in</a>
@@ -95,8 +181,9 @@ button{font-family:inherit}
 <!-- ============ HERO ============ -->
 <section id="top" style="width: 100%; background: #FFFFFF; overflow: hidden">
 <div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 0; display: flex; flex-direction: column; align-items: center; gap: 28px; text-align: center">
+<a class="k-badge kt-rise" href="#messaging"><span class="k-new">NEW</span>Chat with suppliers and see their goods before you order</a>
 <h1 class="kt-rise" style="margin: 0; font-weight: 800; font-size: clamp(44px, 8vw, 104px); line-height: 0.96; letter-spacing: -0.055em; max-width: 960px">Import with<br>peace of mind.</h1>
-<p class="kt-rise-2" style="margin: 0; font-size: clamp(17px, 2vw, 22px); line-height: 1.5; color: #5C5F66; max-width: 600px">Pool money with other traders, pay your supplier in stages, and get refunded automatically if anything goes wrong.</p>
+<p class="kt-rise-2" style="margin: 0; font-size: clamp(17px, 2vw, 22px); line-height: 1.5; color: #5C5F66; max-width: 600px">Group buying, staged escrow and a naira wallet for importers in Nigeria and Ghana. Pay your supplier in stages, and get refunded automatically if anything goes wrong.</p>
 <div class="kt-rise-3" style="display: flex; flex-direction: column; align-items: center; gap: 20px">
 <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 20px">
 <a class="kt-btn" href="/signup" style="display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 30px; border-radius: 999px; background: #101114; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 17px">Create account</a>
@@ -117,6 +204,7 @@ button{font-family:inherit}
 </div>
 </div>
 
+<div class="k-chips kt-rise-3"><span class="k-chip"><i></i>Escrow on Stellar</span><span class="k-chip"><i></i>Pay in naira or cedis</span><span class="k-chip"><i></i>Inspected before release</span><span class="k-chip"><i></i>Automatic refunds</span></div>
 <!-- hero phones -->
 <div style="position: relative; max-width: 1240px; margin: 56px auto 0; height: 580px; overflow: hidden; display: flex; justify-content: center; align-items: flex-start">
 <svg viewBox="0 0 1000 580" width="1000" height="580" aria-hidden="true" style="position: absolute; left: 50%; top: 0; transform: translateX(-50%); max-width: none">
@@ -142,117 +230,97 @@ button{font-family:inherit}
 </div>
 </section>
 
-<!-- ============ TILES + PILLARS ============ -->
+<!-- ============ GET STARTED IN 3 STEPS ============ -->
 <section id="how" style="width: 100%; background: #FFFFFF">
-<div style="max-width: 1240px; margin: 0 auto; padding: 96px 24px 40px; display: flex; flex-direction: column; gap: 56px">
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px">
-
-<div class="kt-card" style="padding: 28px; border-radius: 28px; background: #FFEFE6; display: flex; flex-direction: column; gap: 56px">
-<span style="width: 56px; height: 56px; border-radius: 18px; background: #FFFFFF; display: inline-flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.500 20c.5-3.500 3-5.500 6.500-5.500s6 2 6.500 5.500"></path><circle cx="17.500" cy="9" r="2.500"></circle><path d="M17 14.500c2.500 0 4 1.500 4.500 4.500"></path></svg></span>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 800; font-size: 28px; letter-spacing: -0.04em">Pool</span><span style="font-size: 16px; line-height: 1.45; color: #5C5F66">Fill a container together with other traders.</span></div>
+<div class="k-wrap k-sec" style="padding-bottom: 40px">
+<div class="k-center">
+<span class="k-eyebrow">How it works</span>
+<h2 class="k-h2">From first hello to goods delivered.</h2>
+<p class="k-lead">Three steps. Your money is locked the whole way, and it only moves when the goods are proven.</p>
 </div>
-
-<div class="kt-card" style="padding: 28px; border-radius: 28px; background: #E6F6EE; display: flex; flex-direction: column; gap: 56px">
-<span style="width: 56px; height: 56px; border-radius: 18px; background: #FFFFFF; display: inline-flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="3"></rect><circle cx="12" cy="12" r="2.500"></circle><path d="M6.500 9.500v.01M17.500 14.500v.01"></path></svg></span>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 800; font-size: 28px; letter-spacing: -0.04em">Pay</span><span style="font-size: 16px; line-height: 1.45; color: #5C5F66">Pay in naira or cedis. Suppliers are paid in stages.</span></div>
-</div>
-
-<div class="kt-card" style="padding: 28px; border-radius: 28px; background: #E8F1FF; display: flex; flex-direction: column; gap: 56px">
-<span style="width: 56px; height: 56px; border-radius: 18px; background: #FFFFFF; display: inline-flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16l1.500 3h15L21 16z"></path><path d="M6 16V10h12v6M10 10V7h4v3"></path></svg></span>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 800; font-size: 28px; letter-spacing: -0.04em">Track</span><span style="font-size: 16px; line-height: 1.45; color: #5C5F66">Follow inspection, shipping and arrival live.</span></div>
-</div>
-
-<div class="kt-card" style="padding: 28px; border-radius: 28px; background: #FFF4CC; display: flex; flex-direction: column; gap: 56px">
-<span style="width: 56px; height: 56px; border-radius: 18px; background: #FFFFFF; display: inline-flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.700"></path><path d="M3 4v5h5"></path></svg></span>
-<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-weight: 800; font-size: 28px; letter-spacing: -0.04em">Get refunded</span><span style="font-size: 16px; line-height: 1.45; color: #5C5F66">If a checkpoint fails, locked money comes straight back.</span></div>
-</div>
-</div>
-
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px 40px">
-<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Easy</span><span style="font-weight: 800; font-size: 24px; letter-spacing: -0.035em">Sign up and join in minutes</span><span style="font-size: 16px; line-height: 1.5; color: #5C5F66">No passwords to remember and no crypto to learn. Just your phone.</span></div>
-<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Secure</span><span style="font-weight: 800; font-size: 24px; letter-spacing: -0.035em">Locked until it's proven</span><span style="font-size: 16px; line-height: 1.5; color: #5C5F66">Rules in a smart contract decide when money moves. Nobody can bend them.</span></div>
-<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Fast</span><span style="font-weight: 800; font-size: 24px; letter-spacing: -0.035em">Suppliers paid in seconds</span><span style="font-size: 16px; line-height: 1.5; color: #5C5F66">The moment a checkpoint is confirmed, the next payment goes out.</span></div>
-<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Fair</span><span style="font-weight: 800; font-size: 24px; letter-spacing: -0.035em">Good for both sides</span><span style="font-size: 16px; line-height: 1.5; color: #5C5F66">Suppliers get a deposit. Traders keep control of the balance.</span></div>
+<div class="k-steps">
+<div class="k-step" style="background:#FFEFE6"><span class="k-num">1</span><h3>Create your account</h3><p>Sign up with your email, then secure it with your fingerprint or face. No passwords to remember and no crypto to learn.</p></div>
+<div class="k-step" style="background:#E6F6EE"><span class="k-num">2</span><h3>Find a supplier, or join a group</h3><p>Open a supplier's store, see their goods and message them. Or join an open group order and fill a container with other traders.</p></div>
+<div class="k-step" style="background:#E8F1FF"><span class="k-num">3</span><h3>Pay safely, track to delivery</h3><p>Pay in naira or cedis into escrow. The supplier gets a deposit when they accept, and the balance only after inspection.</p></div>
 </div>
 </div>
 </section>
 
-<!-- ============ ICON STRIP ============ -->
-<section aria-hidden="true" style="width: 100%; background: #FFFFFF; overflow: hidden; padding: 28px 0 40px">
-<div class="kt-marquee" style="display: flex; width: max-content; gap: 14px; padding-right: 14px">
-<div style="display: flex; gap: 14px">
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="2.500"></rect><path d="M7 10v5M12 10v5M17 10v5"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E6F6EE; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="3"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E8F1FF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l1.500 3h15L21 16z"></path><path d="M6 16V10h12v6M10 10V7h4v3"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFF4CC; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2zM14 10h4l3 3v3h-7"></path><circle cx="6.500" cy="17.500" r="1.800"></circle><circle cx="17" cy="17.500" r="1.800"></circle></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #F0EAFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 30px">₦</span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 30px">₵</span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E6F6EE; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="3"></rect><path d="M9 4h6v3H9zM9 13l2 2 4-4"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E8F1FF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFF4CC; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.500 3 7.500 7 9 4-1.500 7-4.500 7-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #F0EAFF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.700"></path><path d="M3 4v5h5"></path></svg></span>
+<!-- ============ FEATURE GRID ============ -->
+<section id="showcase" style="width: 100%; background: #FFFFFF">
+<div class="k-wrap k-sec" style="padding-top: 56px">
+<div class="k-center">
+<span class="k-eyebrow">Features</span>
+<h2 class="k-h2">Everything an importer needs to buy overseas without the guesswork.</h2>
+<p class="k-lead">Each feature solves one real problem traders told us about. Tap any card to see how it works.</p>
 </div>
-<div style="display: flex; gap: 14px">
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="2.500"></rect><path d="M7 10v5M12 10v5M17 10v5"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E6F6EE; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="3"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E8F1FF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16l1.500 3h15L21 16z"></path><path d="M6 16V10h12v6M10 10V7h4v3"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFF4CC; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2zM14 10h4l3 3v3h-7"></path><circle cx="6.500" cy="17.500" r="1.800"></circle><circle cx="17" cy="17.500" r="1.800"></circle></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #F0EAFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 30px">₦</span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 30px">₵</span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E6F6EE; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="3"></rect><path d="M9 4h6v3H9zM9 13l2 2 4-4"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #E8F1FF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #FFF4CC; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4.500 3 7.500 7 9 4-1.500 7-4.500 7-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
-<span style="width: 72px; height: 72px; border-radius: 22px; background: #F0EAFF; display: inline-flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.700"></path><path d="M3 4v5h5"></path></svg></span>
+<div class="k-grid">
+
+<a class="k-feat kt-card" href="#group" style="background:#FFEFE6"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><h3>Group orders</h3><p>Fill a 40ft container with traders from Lagos, Aba, Kano, Accra and Kumasi. Everyone sees who joined and what they paid.</p><span class="k-more">See group orders</span></a>
+
+<a class="k-feat kt-card" href="#staged" style="background:#E6F6EE"><span class="k-ico"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><h3>Staged escrow</h3><p>A 30% deposit goes to the supplier when they accept. The 70% balance stays locked until your goods are inspected and shipped.</p><span class="k-more">See how money moves</span></a>
+
+<a class="k-feat kt-card" href="#messaging" style="background:#E8F1FF"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 0 1 3.5 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5z"/></svg></span><span class="k-tag">NEW</span><h3>Chat with suppliers</h3><p>Ask about prices, samples and delivery before you order. Suppliers answer with photos and videos, and every chat lives in one Messages tab.</p><span class="k-more">See messaging</span></a>
+
+<a class="k-feat kt-card" href="#proof" style="background:#FFF4CC"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span><h3>Photo and video proof</h3><p>Suppliers must show your goods in photos and a video before an order goes to inspection. Then an independent inspector checks them in person.</p><span class="k-more">See the proof</span></a>
+
+<a class="k-feat kt-card" href="#wallet" style="background:#F0EAFF"><span class="k-ico"><svg viewBox="0 0 24 24"><rect x="1" y="5" width="22" height="15" rx="3"/><path d="M1 10h22M17 15h2"/></svg></span><h3>Naira wallet</h3><p>Top up by bank transfer or card, then pay any order from your balance. Suppliers are paid in dollars, so nobody hunts for a rate.</p><span class="k-more">See the wallet</span></a>
+
+<a class="k-feat kt-card" href="#stellar" style="background:#E6F6EE"><span class="k-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><h3>Verify it on Stellar</h3><p>Every order's payments are held by a smart contract on Stellar. Tap View on Stellar to check the real transactions yourself.</p><span class="k-more">See the proof link</span></a>
+
+<a class="k-feat kt-card" href="#safe" style="background:#FFEFE6"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Fingerprint sign-in</h3><p>Confirm payments and withdrawals with your fingerprint or face. No seed phrases, and Kontena pays the network fees.</p><span class="k-more">See safety</span></a>
+
+<a class="k-feat kt-card" href="#staged" style="background:#E8F1FF"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></svg></span><h3>Automatic refunds</h3><p>Missed the shipping deadline or failed inspection? The locked money returns on its own. No chasing, no begging.</p><span class="k-more">See a refund</span></a>
+
+<a class="k-feat kt-card" href="#suppliers" style="background:#FFF4CC"><span class="k-ico"><svg viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14l-3-3"/></svg></span><h3>Verified suppliers</h3><p>Suppliers are identity-checked before they can take an order, and their track record stays on their profile.</p><span class="k-more">For suppliers</span></a>
+
 </div>
 </div>
 </section>
 
-<!-- ============ SHOWCASE ============ -->
-<section id="showcase" style="width: 100%; background: #F7F7F5">
-<div style="max-width: 1240px; margin: 0 auto; padding: 112px 24px; display: flex; flex-direction: column; gap: 56px">
-<div style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
-<h2 style="margin: 0; font-weight: 800; font-size: clamp(36px, 5.6vw, 68px); line-height: 1; letter-spacing: -0.05em">Pool, pay, track.<br>All in one place.</h2>
-<p style="margin: 0; font-size: 19px; line-height: 1.5; color: #5C5F66">Everything an importer needs to buy overseas without the guesswork.</p>
+<!-- ============ MESSAGING ============ -->
+<section id="messaging" style="width: 100%; background: #F7F7F5; overflow: hidden">
+<div class="k-wrap k-sec">
+<div class="k-split">
+<div class="k-text">
+<span class="k-eyebrow">New · Messaging</span>
+<h2 class="k-h2">Ask first. Order when you're sure.</h2>
+<p class="k-lead">Talk to any supplier before you spend a naira. No order needed, no phone numbers swapped, and every conversation stays on Kontena where it can protect you.</p>
+<ul class="k-list">
+<li>Message a supplier straight from their store page.</li>
+<li>Tap Ask on a product and it travels with your question as a card.</li>
+<li>Request a quote, ask for samples, or ask how long delivery takes.</li>
+<li>Suppliers reply with photos and videos of the goods, and can share any product from their store.</li>
+<li>One Messages tab holds every enquiry and order chat, with an unread badge so nothing is missed.</li>
+</ul>
+<a class="k-cta" href="/app/">Browse suppliers</a>
 </div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
-
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.500"></circle><path d="M2.500 20c.5-3.500 3-5.500 6.500-5.500s6 2 6.500 5.500"></path><circle cx="17.500" cy="9" r="2.500"></circle></svg></span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Group orders</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">Fill a 40ft container with traders from Lagos, Aba, Kano, Accra and Kumasi. Everyone sees who joined and what they paid.</span>
+<div class="k-visual" style="gap:0">
+<svg viewBox="0 0 520 520" width="520" height="520" aria-hidden="true" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:110%"><circle cx="260" cy="260" r="250" fill="#E8F1FF"></circle><circle class="kt-spin" cx="260" cy="260" r="200" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"></circle></svg>
+<div class="k-phone"><div class="k-screen">
+<span class="k-notch"></span>
+<div class="k-chat-head"><span class="k-av">LW</span><div><b>Li Wei Trading</b><small>Verified supplier</small></div></div>
+<div class="k-msgs">
+<div class="k-b me"><div class="k-pc"><span class="k-pimg"></span><div><b>Phone accessories</b><small>$5 each</small></div></div>Can you do a better price for a bigger order?</div>
+<div class="k-b them">Yes, we can. Here is the factory floor.<div class="k-vid">0:42</div></div>
+<div class="k-b me">Can I see the black ones too?</div>
+<div class="k-b them">Sent photos. Ready when you are.<div class="k-photos"><i></i><i></i><i></i></div></div>
 </div>
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #E6F6EE; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; font-size: 22px">₦</span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Naira and cedis in</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">Pay by bank transfer or card in your own currency. Suppliers are paid in dollars, so nobody hunts for a rate.</span>
+<div class="k-compose"><span>Write a message</span><em></em></div>
+</div></div>
+<div class="k-inbox" aria-hidden="true">
+<div class="row u"><span class="k-av" style="background:#FFD9C7">LW</span><div><b>Li Wei Trading</b><small>Sent photos. Ready when…</small></div><span class="dot">2</span></div>
+<div class="row"><span class="k-av" style="background:#CDEFDD">AK</span><div><b>Accra Fabrics</b><small>Order KT-2081 · Packed</small></div></div>
+<div class="row"><span class="k-av" style="background:#D5E4FF">KT</span><div><b>Kontena inspector</b><small>Inspection passed</small></div></div>
 </div>
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #E8F1FF; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v6c0 4.500 3 7.500 7 9 4-1.500 7-4.500 7-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg></span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Verified suppliers</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">Every supplier is identity-checked before they can accept an order, and their track record stays on their profile.</span>
 </div>
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #FFF4CC; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="3"></rect><path d="M9 4h6v3H9zM9 13l2 2 4-4"></path></svg></span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Independent inspection</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">An inspector checks quantity and quality at the factory, with a checklist and photos, before the balance can move.</span>
 </div>
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #F0EAFF; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h12v9H2zM14 10h4l3 3v3h-7"></path><circle cx="6.500" cy="17.500" r="1.800"></circle><circle cx="17" cy="17.500" r="1.800"></circle></svg></span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Live shipping updates</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">Follow your goods from the factory to the port. The bill of lading is uploaded by a verified freight forwarder.</span>
-</div>
-<div class="kt-card" style="padding: 32px; border-radius: 28px; background: #FFFFFF; display: flex; flex-direction: column; gap: 14px">
-<span style="width: 48px; height: 48px; border-radius: 16px; background: #FFEFE6; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.700"></path><path d="M3 4v5h5"></path></svg></span>
-<span style="font-weight: 800; font-size: 22px; letter-spacing: -0.03em">Automatic refunds</span>
-<span style="font-size: 16px; line-height: 1.55; color: #5C5F66">Missed deadline or failed inspection? Locked money returns to every trader on its own. No chasing.</span>
-</div>
-
-</div>
+<p class="k-cap">Illustrative conversation.</p>
 </div>
 </section>
 
 <!-- ============ DEEP DIVE 1: GROUP ============ -->
-<section style="width: 100%; background: #FFFFFF; overflow: hidden">
+<section id="group" style="width: 100%; background: #FFFFFF; overflow: hidden">
 <div style="max-width: 1240px; margin: 0 auto; padding: 112px 24px 56px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 80px">
 <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
 <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Group orders</span>
@@ -272,7 +340,7 @@ button{font-family:inherit}
 </section>
 
 <!-- ============ DEEP DIVE 2: STAGED PAYMENT (INTERACTIVE) ============ -->
-<section style="width: 100%; background: #FFFFFF">
+<section id="staged" style="width: 100%; background: #FFFFFF">
 <div style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 112px; display: flex; flex-wrap: wrap-reverse; align-items: center; gap: 48px 80px">
 <div style="flex: 1 1 440px; min-width: 0">
 <div style="padding: clamp(20px, 3vw, 32px); border-radius: 32px; background: #F7F7F5; display: flex; flex-direction: column; gap: 22px">
@@ -322,12 +390,13 @@ button{font-family:inherit}
 </section>
 
 <!-- ============ DEEP DIVE 3: PROOF ============ -->
-<section style="width: 100%; background: #FFFFFF; overflow: hidden">
+<section id="proof" style="width: 100%; background: #FFFFFF; overflow: hidden">
 <div style="max-width: 1240px; margin: 0 auto; padding: 0 24px 112px; display: flex; flex-wrap: wrap; align-items: center; gap: 48px 80px">
 <div style="flex: 1 1 400px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
 <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #FF5B14">Proof you can trust</span>
 <h2 style="margin: 0; font-weight: 800; font-size: clamp(34px, 4.6vw, 56px); line-height: 1.02; letter-spacing: -0.05em">Real people check the goods before the money moves.</h2>
 <ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; font-size: 18px; line-height: 1.5">
+<li style="display: flex; gap: 14px"><span style="width: 26px; height: 26px; border-radius: 999px; background: #101114; flex: none; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Suppliers must upload at least 3 photos and a video of the goods before an order can go to inspection</li>
 <li style="display: flex; gap: 14px"><span style="width: 26px; height: 26px; border-radius: 999px; background: #101114; flex: none; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Inspectors work from a checklist and attach photos</li>
 <li style="display: flex; gap: 14px"><span style="width: 26px; height: 26px; border-radius: 999px; background: #101114; flex: none; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Freight forwarders upload the bill of lading</li>
 <li style="display: flex; gap: 14px"><span style="width: 26px; height: 26px; border-radius: 999px; background: #101114; flex: none; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Every sign-off is recorded and can't be changed afterwards</li>
@@ -336,6 +405,58 @@ button{font-family:inherit}
 <div style="flex: 1 1 380px; min-width: 0; display: flex; justify-content: center; position: relative; padding: 32px 0">
 <svg viewBox="0 0 520 520" width="520" height="520" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); max-width: 110%"><circle cx="260" cy="260" r="250" fill="#E6F6EE"></circle><circle class="kt-spin" cx="260" cy="260" r="200" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"></circle></svg>
 <div class="" style="width:284px;height:560px;border-radius:46px;background:#101114;padding:9px;box-shadow:0 30px 70px rgba(16,17,20,0.22), inset 0 0 0 1.5px #3A3D45;flex:none"><div style="position:relative;width:100%;height:100%;border-radius:36px;background:#FFFFFF;overflow:hidden;"><span style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:82px;height:23px;border-radius:999px;background:#000;z-index:7"></span><div style="position:absolute;top:0;left:0;right:0;height:46px;padding:15px 24px 0;display:flex;justify-content:space-between;align-items:flex-start;font-size:13px;font-weight:700;color:#101114;z-index:5;letter-spacing:-0.01em"><span>9:41</span><span style="display:inline-flex;gap:5px;align-items:center"><svg width="17" height="11" viewBox="0 0 17 11" aria-hidden="true"><g fill="#101114"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></g></svg><svg width="24" height="11" viewBox="0 0 24 11" aria-hidden="true"><rect x="0.5" y="0.5" width="20" height="10" rx="3" fill="none" stroke="#101114" opacity=".4"/><rect x="2" y="2" width="14" height="7" rx="1.8" fill="#101114"/><rect x="21.5" y="3.5" width="1.8" height="4" rx=".9" fill="#101114" opacity=".4"/></svg></span></div><div style="position:absolute;inset:0;padding:54px 16px 0;display:flex;flex-direction:column;gap:11px;background:#fff"><div style="display:flex;justify-content:space-between;align-items:center"><span style="width:32px;height:32px;border-radius:50%;background:#F7F7F5;display:inline-flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M15 5l-7 7 7 7"/></svg></span><span style="font-weight:800;font-size:14px">Inspection</span><span style="width:32px"></span></div><div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:18px;background:#F7F7F5"><svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true" style="border-radius:50%;flex:none;display:block"><rect width="48" height="48" fill="#CDEFDD"/><path d="M11.5 20 C11.5 8 36.5 8 36.5 20 L37 40 L11 40Z" fill="#1B1412"/><ellipse cx="24" cy="50" rx="17" ry="13" fill="#0E7A4B"/><rect x="20" y="29" width="8" height="9" rx="3" fill="#6B4430"/><path d="M20 33 Q24 36 28 33 L28 31 L20 31Z" fill="rgba(0,0,0,.13)"/><circle cx="14.6" cy="23.5" r="2" fill="#6B4430"/><circle cx="33.4" cy="23.5" r="2" fill="#6B4430"/><ellipse cx="24" cy="22.5" rx="9.2" ry="10.4" fill="#6B4430"/><path d="M14.5 21 C14 12 19 10 24 10 C29 10 34 12 33.5 21 C31 16.5 27 15 24 15 C20 15 17 16.5 14.5 21Z" fill="#1B1412"/><circle cx="20.4" cy="22.6" r="1.25" fill="#2A1B14"/><circle cx="27.6" cy="22.6" r="1.25" fill="#2A1B14"/><path d="M18.2 19.6 Q20.4 18.4 22.6 19.4 M25.4 19.4 Q27.6 18.4 29.8 19.6" fill="none" stroke="#1B1412" stroke-width="0.9" stroke-linecap="round"/><path d="M20.8 27 Q24 29.8 27.2 27" fill="none" stroke="#3A1F14" stroke-width="1.3" stroke-linecap="round"/></svg><div style="display:flex;flex-direction:column;line-height:1.25;flex:1"><span style="font-weight:800;font-size:13.5px">Ama Owusu</span><span style="font-size:10.5px;color:#5C5F66;font-weight:600">Independent inspector · Guangzhou</span></div><span style="font-size:9.5px;font-weight:800;padding:4px 8px;border-radius:99px;background:#E6F6EE;color:#0E7A4B">Verified</span></div><div style="display:flex;flex-direction:column;gap:7px"><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:#E6F6EE"><span style="width:20px;height:20px;border-radius:50%;background:#101114;display:inline-flex;align-items:center;justify-content:center;flex:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span style="font-size:12.5px;font-weight:700">Quantity matches · 2,400</span></div><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:#E6F6EE"><span style="width:20px;height:20px;border-radius:50%;background:#101114;display:inline-flex;align-items:center;justify-content:center;flex:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span style="font-size:12.5px;font-weight:700">Quality passes sample</span></div><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:#E6F6EE"><span style="width:20px;height:20px;border-radius:50%;background:#101114;display:inline-flex;align-items:center;justify-content:center;flex:none"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span style="font-size:12.5px;font-weight:700">Packed and sealed</span></div><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:#FFF4CC"><span class="kt-pulse" style="width:20px;height:20px;border-radius:50%;border:2.5px solid #FF5B14;flex:none"></span><span style="font-size:12.5px;font-weight:700">Bill of lading</span></div></div><div style="display:flex;gap:8px"><span style="flex:1;height:58px;border-radius:12px;background:#FFEFE6;display:flex;align-items:center;justify-content:center"><svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><rect x="2" y="8" width="30" height="20" rx="3" fill="#FF5B14"/><path d="M10 8v20M18 8v20M26 8v20" stroke="#E04A0A" stroke-width="2"/></svg></span><span style="flex:1;height:58px;border-radius:12px;background:#E8F1FF;display:flex;align-items:center;justify-content:center"><svg width="34" height="30" viewBox="0 0 34 30" aria-hidden="true"><rect x="3" y="4" width="28" height="22" rx="3" fill="#2F6BFF"/><rect x="9" y="10" width="16" height="10" rx="2" fill="#fff"/></svg></span><span style="flex:1;height:58px;border-radius:12px;border:2px dashed #DCDCD8;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A8D94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span></div></div><div style="position:absolute;left:0;right:0;bottom:0;z-index:6;background:#101114;color:#fff;border-radius:24px 24px 0 0;padding:10px 18px 26px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 -14px 40px rgba(16,17,20,.25)"><span style="width:36px;height:4px;border-radius:99px;background:#3A3D45"></span><span style="font-size:11px;color:#9A9DA5;font-weight:600">Release to supplier</span><span style="font-weight:800;font-size:24px;letter-spacing:-0.045em">$8,400</span><span style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;background:#FF5B14;position:relative"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#101114" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 11V5a2 2 0 0 1 4 0v6M8 12a4 4 0 0 1 8 0v4a6 6 0 0 1-12 0v-2"/></svg></span><span style="font-size:10.5px;color:#9A9DA5;font-weight:600">Touch to approve</span></div><span aria-hidden="true" style="position:absolute;left:133px;top:472px;width:44px;height:44px;margin:-22px 0 0 -22px;z-index:6;pointer-events:none"><span class="kt-pulse" style="position:absolute;inset:0;border-radius:50%;border:2px solid #FFFFFF;opacity:.5"></span><span style="position:absolute;inset:9px;border-radius:50%;background:#FFFFFF;opacity:.22"></span><span style="position:absolute;inset:16px;border-radius:50%;background:#FFFFFF;opacity:.55"></span></span><span style="position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:96px;height:4px;border-radius:99px;background:#FFFFFF;z-index:8"></span></div></div>
+</div>
+</div>
+</section>
+
+<!-- ============ NAIRA WALLET ============ -->
+<section id="wallet" style="width: 100%; background: #FFFFFF; overflow: hidden">
+<div class="k-wrap k-sec">
+<div class="k-split">
+<div class="k-visual" style="order:2">
+<div class="k-wallet">
+<div><small>Naira wallet</small><div class="bal">₦450,000</div></div>
+<div class="acct"><span>Your bank account number</span><b>Pay by bank transfer</b></div>
+<div class="btns"><span>Top up</span><span>Pay an order</span></div>
+</div>
+</div>
+<div class="k-text" style="order:1">
+<span class="k-eyebrow">Naira wallet</span>
+<h2 class="k-h2">Pay in naira. Your supplier gets dollars.</h2>
+<p class="k-lead">Keep a balance in naira and spend it on any order. Kontena handles the conversion, so you never chase a dollar rate or send money to a stranger's account.</p>
+<ul class="k-list">
+<li>Top up by bank transfer or by card.</li>
+<li>Pay any order, or your share of a group order, straight from your balance.</li>
+<li>The conversion to dollars is done for you, using a rate you see before you pay.</li>
+<li>Suppliers withdraw to a bank account or mobile money.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ============ STELLAR: VERIFY IT YOURSELF ============ -->
+<section id="stellar" style="width: 100%; background: #F7F7F5">
+<div class="k-wrap k-sec">
+<div class="k-center">
+<span class="k-eyebrow">Built on Stellar</span>
+<h2 class="k-h2">Don't take our word for it. Check the record.</h2>
+<p class="k-lead">Each order's money is held by an escrow smart contract on Stellar, a public payment network. You can look at every step yourself.</p>
+</div>
+<div class="k-flow">
+<div class="k-node"><b>You pay in naira</b><span>From your wallet or by card. You never need to hold crypto.</span></div>
+<div class="k-node"><b>Naira becomes USDC</b><span>A path payment converts it on Stellar's built-in exchange, within a slippage limit.</span></div>
+<div class="k-node"><b>The contract holds it</b><span>The escrow contract locks the money for this order and nothing else.</span></div>
+<div class="k-node"><b>Release or refund</b><span>It goes to the supplier after inspection, or back to you if a checkpoint fails.</span></div>
+</div>
+<div class="k-verify">
+<div class="t">
+<span class="k-net"><i></i>Running on Stellar testnet today</span>
+<b>The escrow contract is public.</b>
+<p>Funds can only go to the supplier or back to the buyer. The contract has no way to send them to Kontena, and it can't be changed after it is deployed.</p>
+<code>CCSOFSGVJDGW6OQ7U444HCNUET5SFCNGJMNZB2F3NKFLENL6BOUMDIXA</code>
+</div>
+<a class="k-cta light" href="https://stellar.expert/explorer/testnet/contract/CCSOFSGVJDGW6OQ7U444HCNUET5SFCNGJMNZB2F3NKFLENL6BOUMDIXA" target="_blank" rel="noopener">View on Stellar</a>
 </div>
 </div>
 </section>
@@ -366,6 +487,31 @@ button{font-family:inherit}
 <circle cx="336" cy="200" r="30" fill="#FFFFFF"></circle><text x="336" y="211" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="30" fill="#101114">₵</text>
 <circle cx="200" cy="48" r="26" fill="#3DDC97"></circle><text x="200" y="58" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="28" fill="#101114">$</text>
 </svg>
+</div>
+</div>
+</section>
+
+<!-- ============ FOR SUPPLIERS ============ -->
+<section id="suppliers" style="width: 100%; background: #FFFFFF">
+<div class="k-wrap k-sec">
+<div class="k-sup">
+<div class="k-split">
+<div class="k-text">
+<span class="k-eyebrow">For suppliers</span>
+<h2 class="k-h2">Sell to traders who have already paid in.</h2>
+<p class="k-lead" style="color:#4A4D55">Buyers' money is locked before you ship, so you stop chasing payments. You keep the deposit-and-balance deal you already work with, with fewer excuses.</p>
+<a class="k-cta" href="/signup">Open your store</a>
+</div>
+<div class="k-visual" style="padding:0">
+<ul class="k-list" style="max-width:520px">
+<li>Get a 30% deposit the moment you accept an order, to buy materials and pay workers.</li>
+<li>The balance is already locked and is released within seconds of inspection.</li>
+<li>Share one store link or QR code, and let buyers see your goods and message you.</li>
+<li>Withdraw to a bank account or mobile money.</li>
+<li>A Verified badge tells new buyers they can trust you.</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 </section>
@@ -508,6 +654,11 @@ var fmt=function(n){return '$'+n.toLocaleString('en-US')};
 var faqData=[
 { q: 'Why would a supplier agree to this?', a: 'They still get a deposit upfront, the balance is guaranteed and already locked, and they are paid the moment goods ship. Many suppliers prefer it to chasing buyers for money.' },
 { q: 'Who decides the deposit size?', a: 'The group and the supplier agree on it for each order, usually between 20% and 50%.' },
+{ q: 'Can I talk to a supplier before I order?', a: 'Yes. Open any supplier\'s store and tap Message. Ask about prices, minimum quantities, samples or delivery, and ask for photos and videos of the goods. Every enquiry and order chat sits in your Messages tab.' },
+{ q: 'What proof do suppliers have to show?', a: 'Before an order goes to inspection, the supplier uploads at least 3 photos and a video of the goods. An independent inspector then checks the real goods against them.' },
+{ q: 'What happens if the supplier does not ship?', a: 'If the shipping deadline passes, the locked money is refunded automatically. If an inspection fails, the balance goes back to the traders and the supplier keeps only the deposit they were already paid.' },
+{ q: 'Is my money really held on Stellar?', a: 'Yes. Each order\'s payment is held by an escrow smart contract on Stellar, and every order has a View on Stellar link so you can check it yourself. Kontena is running on Stellar\'s test network today while we prepare to go live.' },
+{ q: 'Which countries and currencies do you support?', a: 'Nigeria and Ghana. You pay in naira or cedis, and suppliers are paid in dollars.' },
 { q: 'Do I need to understand crypto?', a: 'No. You pay in naira or cedis and sign in with your fingerprint. Stellar works in the background.' },
 { q: 'Who confirms the goods shipped?', a: 'An independent inspector checks the goods at the factory, and a verified freight forwarder uploads the bill of lading before the balance is released.' },
 { q: 'How much does Kontena cost?', a: 'A small fee on each completed order: 1.5%. There is no sign-up fee, and nothing is charged on an order that is refunded.' }
